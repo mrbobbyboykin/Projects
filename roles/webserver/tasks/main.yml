@@ -1,0 +1,64 @@
+---
+- name: Validate web_stack selection
+  ansible.builtin.assert:
+    that:
+      - web_stack in ['nginx', 'httpd']
+    fail_msg: "web_stack must be 'nginx' or 'httpd' (got {{ web_stack }})"
+
+- name: Install web server packages
+  ansible.builtin.package:
+    name: "{{ nginx_packages if web_stack == 'nginx' else httpd_packages }}"
+    state: present
+
+- name: Ensure firewalld is installed and enabled
+  ansible.builtin.package:
+    name: firewalld
+    state: present
+
+- name: Enable and start firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Open HTTP/HTTPS in firewalld
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ web_firewall_services }}"
+
+- name: Deploy index page (nginx docroot)
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+  when: web_stack == 'nginx'
+  notify: Reload nginx
+
+- name: Deploy index page (httpd docroot)
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+  when: web_stack == 'httpd'
+  notify: Reload httpd
+
+- name: Enable and start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+  when: web_stack == 'nginx'
+
+- name: Enable and start httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+  when: web_stack == 'httpd'

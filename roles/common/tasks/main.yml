@@ -1,0 +1,7 @@
+---
+- name: Ensure base packages for Ansible facts/modules are present
+  ansible.builtin.package:
+    name:
+      - python3
+      - python3-libselinux
+    state: present

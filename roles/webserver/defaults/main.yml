@@ -1,0 +1,13 @@
+---
+# web_stack: "nginx" | "httpd"
+web_stack: nginx
+
+nginx_packages:
+  - nginx
+
+httpd_packages:
+  - httpd
+
+web_firewall_services:
+  - http
+  - https

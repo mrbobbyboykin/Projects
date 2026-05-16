@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ inventory_hostname }}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 3rem; line-height: 1.5; }
+    code { background: #f4f4f4; padding: 0.15rem 0.35rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>RHEL Ansible Lab</h1>
+  <p><strong>Host:</strong> {{ inventory_hostname }}</p>
+  <p><strong>Web stack:</strong> {{ web_stack }}</p>
+  <p><strong>Deployed with:</strong> Ansible roles (<code>common</code>, <code>webserver</code>)</p>
+</body>
+</html>

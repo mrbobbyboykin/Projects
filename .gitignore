@@ -1,0 +1,9 @@
+*.retry
+.vault_pass
+*.swp
+.serena/
+.idea/
+.vscode/
+*.log
+__pycache__/
+.venv/

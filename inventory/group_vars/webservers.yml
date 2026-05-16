@@ -1,0 +1,4 @@
+---
+# Shared variables for all nodes in [webservers]
+
+web_stack: nginx

@@ -1,0 +1,10 @@
+---
+# Primary entrypoint: configure all nodes in [webservers].
+# Usage (from Control-Node, project root):
+#   ansible-playbook playbooks/site.yml
+- name: Configure lab web servers
+  hosts: webservers
+  become: true
+  roles:
+    - role: common
+    - role: webserver
