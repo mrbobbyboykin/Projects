@@ -7,20 +7,18 @@ Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app 
 ```mermaid
 flowchart LR
   CN[Control-Node\nAnsible + Git]
-  A1[App-Node / Web VM]
-  A2[App-Node-02]
-  A3[App-Node-03]
+  A1[App-Node1]
+  A2[App-Node2]
   CN -->|SSH key auth| A1
   CN --> A2
-  CN --> A3
 ```
 
 - **Control-Node**: where you run `ansible-playbook` (Git repo lives here).
-- **App nodes**: members of inventory group `[webservers]`; receive packages, services, and firewall rules.
+- **App-Node1** and **App-Node2**: members of inventory group `[webservers]`; receive packages, services, and firewall rules.
 
 ## Prerequisites
 
-- Oracle VirtualBox on Windows 11; **two or more RHEL VMs** (clone the app VM when you want three web servers).
+- Oracle VirtualBox on Windows 11; **three RHEL VMs** (Control-Node + App-Node1 + App-Node2).
 - SSH key-based auth from Control-Node to each app node (see `docs/LAB-SETUP.md`).
 - On **Control-Node**:
 
@@ -47,10 +45,13 @@ chmod +x scripts/deploy.sh
 Smoke test from your browser or `curl`:
 
 ```bash
-curl -s http://192.168.56.101 | head
+curl -s http://192.168.1.160 | head
+curl -s http://192.168.1.161 | head
 ```
 
-### Parallel timing (“3 servers under ~2 minutes”)
+(Use the IPs from your `inventory/hosts.ini`.)
+
+### Parallel timing (two app nodes)
 
 Use enough forks (already set in `ansible.cfg`) and run:
 
@@ -103,7 +104,7 @@ Suggested tags aligned to your roadmap:
 | Tag | Meaning (example) |
 |-----|-------------------|
 | `v1.0.0` | Single app node; baseline nginx/httpd + firewalld |
-| `v2.0.0` | Three-node inventory; role refactor + README/pro docs |
+| `v2.0.0` | Two-node inventory; role refactor + README/pro docs |
 
 Create after meaningful milestones:
 

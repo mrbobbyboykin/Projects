@@ -6,7 +6,7 @@
 |------|----------------|
 | Rebuild/clean RHEL VMs | Lab procedure (outside Git). |
 | Static IP or DHCP reservations | Document IPs in `inventory/hosts.ini`. |
-| Hostnames `Control-Node`, `App-Node` | Match `inventory_hostname` / inventory names. |
+| Hostnames `Control-Node`, `App-Node1`, `App-Node2` | Match `inventory_hostname` / inventory names. |
 | SSH keys | See `docs/LAB-SETUP.md`. |
 | Git + Ansible on control | README prerequisites. |
 | **Deliverable:** passwordless SSH control → app | Verified with `ansible webservers -m ping`. |
@@ -20,7 +20,7 @@
 | firewalld HTTP/HTTPS | `ansible.posix.firewalld` in same role |
 | Variables | `group_vars`, `defaults/main.yml`, `web_stack` |
 | Roles structure | `roles/common`, `roles/webserver` |
-| Stretch: second/third app VM | Duplicate entries in `inventory/hosts.ini`, clone VM |
+| Stretch: third app VM | Add `App-Node3` in `inventory/hosts.ini`, clone VM |
 | **Deliverable:** one command | `ansible-playbook playbooks/site.yml` |
 
 ## Weeks 5–6 — Professional polish
@@ -31,4 +31,4 @@
 | README + architecture | `README.md` (Mermaid diagram) |
 | Meaningful Git commits | Small commits per concern (inventory vs role vs docs). |
 | Version tags | `v1.0.0`, `v2.0.0` per README |
-| **Scenario:** “Provision 3 web servers under ~2 minutes” | `time ansible-playbook …` after warm cache; `forks` in `ansible.cfg` |
+| **Scenario:** “Provision 2 web servers quickly” | `time ansible-playbook …` after warm cache; `forks` in `ansible.cfg` |
