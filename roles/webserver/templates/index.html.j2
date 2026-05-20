@@ -2,16 +2,207 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>{{ inventory_hostname }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ inventory_hostname }} · RHEL Ansible Lab</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 3rem; line-height: 1.5; }
-    code { background: #f4f4f4; padding: 0.15rem 0.35rem; border-radius: 4px; }
+    :root {
+      --bg: #1a1d21;
+      --surface: #252a30;
+      --surface-elevated: #2e343c;
+      --text: #e8eaed;
+      --text-muted: #9aa0a6;
+      --accent: #5c9ce6;
+      --accent-soft: rgba(92, 156, 230, 0.15);
+      --border: #3d444d;
+      --success: #6bcf7f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+      background: linear-gradient(160deg, #14171a 0%, var(--bg) 40%, #1e2328 100%);
+    }
+
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 3rem;
+    }
+
+    header { margin-bottom: 2rem; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(92, 156, 230, 0.35);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.75rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .meta-grid { display: grid; gap: 0.65rem; }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+      align-items: baseline;
+    }
+
+    .meta-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 6.5rem;
+    }
+
+    .meta-value {
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 0.9rem;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    .status::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    ul.achievements {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    ul.achievements li {
+      margin-bottom: 0.5rem;
+    }
+
+    ul.achievements li::marker { color: var(--accent); }
+
+    footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    code {
+      font-size: 0.85em;
+      background: var(--surface-elevated);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
-  <h1>RHEL Ansible Lab</h1>
-  <p><strong>Host:</strong> {{ inventory_hostname }}</p>
-  <p><strong>Web stack:</strong> {{ web_stack }}</p>
-  <p><strong>Deployed with:</strong> Ansible roles (<code>common</code>, <code>webserver</code>)</p>
+  <div class="wrap">
+    <header>
+      <span class="badge">Portfolio lab</span>
+      <h1>RHEL Ansible Web Lab</h1>
+      <p class="lead">Automated multi-node web tier on RHEL 9 — provisioned from a Git-backed control host.</p>
+    </header>
+
+    <section class="card">
+      <h2>This host</h2>
+      <div class="meta-grid">
+        <div class="meta-row">
+          <span class="meta-label">Hostname</span>
+          <span class="meta-value">{{ inventory_hostname }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Address</span>
+          <span class="meta-value">{{ ansible_host | default(ansible_default_ipv4.address | default('n/a')) }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Web stack</span>
+          <span class="meta-value">{{ web_stack }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Status</span>
+          <span class="meta-value"><span class="status">Serving HTTP</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>What this project demonstrates</h2>
+      <ul class="achievements">
+        <li>Three-VM lab: <strong>Control-Node</strong> plus <strong>App-Node1</strong> and <strong>App-Node2</strong> on VirtualBox (bridged networking).</li>
+        <li>SSH key authentication and passwordless <code>sudo</code> for automation from the control host.</li>
+        <li>Idempotent Ansible roles (<code>common</code>, <code>webserver</code>) driven by inventory and variables.</li>
+        <li>One-command deploy: <code>ansible-playbook playbooks/site.yml</code> installs {{ web_stack }}, enables the service, and opens <code>http</code>/<code>https</code> in firewalld.</li>
+        <li>Source of truth in GitHub; changes committed on Windows and pulled on the control node before each run.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Stack details</h2>
+      <div class="meta-grid">
+        <div class="meta-row">
+          <span class="meta-label">Roles</span>
+          <span class="meta-value">common, webserver</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Deployed</span>
+          <span class="meta-value">{{ ansible_date_time.date }} {{ ansible_date_time.time }} ({{ ansible_date_time.tz }})</span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built for cloud / platform engineering portfolio practice · RHEL {{ ansible_distribution_major_version | default('9') }}
+    </footer>
+  </div>
 </body>
 </html>
