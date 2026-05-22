@@ -93,24 +93,3 @@ git commit -m "feat: ansible scaffold for multi-node web stack"
 
 ## Versioning (Git)
 
-Suggested tags aligned to your roadmap:
-
-| Tag | Meaning (example) |
-|-----|-------------------|
-| `v1.0.0` | Single app node; baseline nginx/httpd + firewalld |
-| `v2.0.0` | Two-node inventory; role refactor + README/pro docs |
-
-Create after meaningful milestones:
-
-```bash
-git tag -a v1.0.0 -m "Baseline web stack automation"
-git tag -a v2.0.0 -m "Multi-node demo + documentation pass"
-```
-
-## Roadmap alignment
-
-See `docs/ROADMAP.md` for week-by-week tasks mapped to this repo.
-
-## License
-
-MIT (adjust if your employer/org requires otherwise).
