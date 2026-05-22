@@ -4,17 +4,11 @@ Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app 
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  CN[Control-Node\nAnsible + Git]
-  A1[App-Node1]
-  A2[App-Node2]
-  CN -->|SSH key auth| A1
-  CN --> A2
-```
+![Ansible lab architecture](docs/Ansible%20Lab%20Architecture.png)
 
-- **Control-Node**: where you run `ansible-playbook` (Git repo lives here).
-- **App-Node1** and **App-Node2**: members of inventory group `[webservers]`; receive packages, services, and firewall rules.
+- **Windows 11 host**: developer workstation pushes playbooks to **GitHub** (`HTTPS git push`); browser tests **HTTP :80** on each app node.
+- **Control-Node** (VirtualBox): pulls the repo (`HTTPS git pull`), runs `ansible-playbook playbooks/site.yml`, and connects to app nodes over **SSH :22** (`ansible` user + key).
+- **App-Node1** and **App-Node2**: `[webservers]` targets running **nginx :80**, with **firewalld** (`http`/`https`) and a templated landing page per host.
 
 ## Prerequisites
 
