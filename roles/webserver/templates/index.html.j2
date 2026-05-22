@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ inventory_hostname }} · RHEL Ansible Lab</title>
+  <title>{{ inventory_hostname }} · Platform Automation Lab</title>
   <style>
     :root {
       --bg: #1a1d21;
@@ -30,12 +30,12 @@
     }
 
     .wrap {
-      max-width: 42rem;
+      max-width: 44rem;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 3rem;
     }
 
-    header { margin-bottom: 2rem; }
+    header { margin-bottom: 1.75rem; }
 
     .badge {
       display: inline-block;
@@ -52,10 +52,11 @@
     }
 
     h1 {
-      margin: 0 0 0.5rem;
-      font-size: 1.75rem;
+      margin: 0 0 0.6rem;
+      font-size: 1.85rem;
       font-weight: 650;
       letter-spacing: -0.02em;
+      line-height: 1.25;
     }
 
     .lead {
@@ -73,13 +74,52 @@
     }
 
     .card h2 {
-      margin: 0 0 0.75rem;
+      margin: 0 0 0.85rem;
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
     }
+
+    .arch-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.35rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .arch-node {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .arch-node.highlight {
+      border-color: rgba(92, 156, 230, 0.5);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .arch-arrow { color: var(--accent); font-weight: 600; }
+
+    .arch-note {
+      margin: 0.75rem 0 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    ul.evidence, ul.ops {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    ul.evidence li, ul.ops li { margin-bottom: 0.55rem; }
+    ul.evidence li::marker, ul.ops li::marker { color: var(--accent); }
 
     .meta-grid { display: grid; gap: 0.65rem; }
 
@@ -118,16 +158,34 @@
       box-shadow: 0 0 8px var(--success);
     }
 
-    ul.achievements {
-      margin: 0;
-      padding-left: 1.2rem;
+    table.stack {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
     }
 
-    ul.achievements li {
-      margin-bottom: 0.5rem;
+    table.stack th,
+    table.stack td {
+      text-align: left;
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    ul.achievements li::marker { color: var(--accent); }
+    table.stack th {
+      color: var(--text-muted);
+      font-weight: 600;
+      width: 38%;
+    }
+
+    table.stack tr:last-child th,
+    table.stack tr:last-child td { border-bottom: none; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
 
     footer {
       margin-top: 1.5rem;
@@ -148,10 +206,50 @@
 <body>
   <div class="wrap">
     <header>
-      <span class="badge">Portfolio lab</span>
-      <h1>RHEL Ansible Web Lab</h1>
-      <p class="lead">Automated multi-node web tier on RHEL 9 — provisioned from a Git-backed control host.</p>
+      <span class="badge">Cloud / platform engineering lab</span>
+      <h1>Repeatable multi-node web tier on RHEL 9</h1>
+      <p class="lead">
+        Ansible provisions identical app servers from a Git-backed control host—one playbook,
+        inventory-driven targets, hardened firewall rules, and a verified HTTP endpoint on each node.
+      </p>
     </header>
+
+    <section class="card">
+      <h2>Architecture</h2>
+      <div class="arch-flow" aria-label="Lab topology">
+        <span class="arch-node">Control-Node</span>
+        <span class="arch-arrow">→ SSH →</span>
+        <span class="arch-node">App-Node1</span>
+        <span class="arch-arrow">·</span>
+        <span class="arch-node">App-Node2</span>
+      </div>
+      <p class="arch-note">
+        <strong>GitHub</strong> (source of truth) → pull on control host →
+        <code>ansible-playbook playbooks/site.yml</code> →
+        <code>{{ web_stack }}</code> + <code>firewalld</code> (http/https) on each <code>[webservers]</code> host.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>What I implemented</h2>
+      <ul class="evidence">
+        <li><strong>Inventory-driven scale-out:</strong> group <code>[webservers]</code> targets multiple nodes; the same playbook configures each app server without manual steps.</li>
+        <li><strong>Non-interactive automation:</strong> dedicated <code>ansible</code> user, SSH key auth, and passwordless <code>sudo</code> so runs do not depend on typed passwords.</li>
+        <li><strong>Idempotent roles:</strong> <code>common</code> (baseline packages) and <code>webserver</code> ({{ web_stack }}, service enable, templated content, firewall services).</li>
+        <li><strong>One-command deploy:</strong> <code>ansible-playbook playbooks/site.yml</code> from the control host reproduces the full stack on every app node.</li>
+        <li><strong>Change discipline:</strong> commits on Windows → push to GitHub → <code>git pull</code> on Control-Node before each automation run.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Operations practices</h2>
+      <ul class="ops">
+        <li><strong>Health checks:</strong> <code>ansible webservers -m ping</code> and HTTP verification on port 80 for each target.</li>
+        <li><strong>Idempotency:</strong> re-running the playbook should report mostly <code>ok</code> with minimal <code>changed</code> tasks.</li>
+        <li><strong>Security baseline:</strong> least-privilege automation account, <code>firewalld</code> allows only required services (ssh, http, https).</li>
+        <li><strong>Per-host proof:</strong> this page is templated per inventory hostname—you are viewing the instance that answered for <strong>{{ inventory_hostname }}</strong>.</li>
+      </ul>
+    </section>
 
     <section class="card">
       <h2>This host</h2>
@@ -169,39 +267,44 @@
           <span class="meta-value">{{ web_stack }}</span>
         </div>
         <div class="meta-row">
-          <span class="meta-label">Status</span>
-          <span class="meta-value"><span class="status">Serving HTTP</span></span>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>What this project demonstrates</h2>
-      <ul class="achievements">
-        <li>Three-VM lab: <strong>Control-Node</strong> plus <strong>App-Node1</strong> and <strong>App-Node2</strong> on VirtualBox (bridged networking).</li>
-        <li>SSH key authentication and passwordless <code>sudo</code> for automation from the control host.</li>
-        <li>Idempotent Ansible roles (<code>common</code>, <code>webserver</code>) driven by inventory and variables.</li>
-        <li>One-command deploy: <code>ansible-playbook playbooks/site.yml</code> installs {{ web_stack }}, enables the service, and opens <code>http</code>/<code>https</code> in firewalld.</li>
-        <li>Source of truth in GitHub; changes committed on Windows and pulled on the control node before each run.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Stack details</h2>
-      <div class="meta-grid">
-        <div class="meta-row">
-          <span class="meta-label">Roles</span>
-          <span class="meta-value">common, webserver</span>
+          <span class="meta-label">HTTP status</span>
+          <span class="meta-value"><span class="status">Serving on port 80</span></span>
         </div>
         <div class="meta-row">
-          <span class="meta-label">Deployed</span>
+          <span class="meta-label">Last deploy</span>
           <span class="meta-value">{{ ansible_date_time.date }} {{ ansible_date_time.time }} ({{ ansible_date_time.tz }})</span>
         </div>
       </div>
     </section>
 
+    <section class="card">
+      <h2>Tech stack</h2>
+      <table class="stack">
+        <tr><th>Hypervisor</th><td>Oracle VirtualBox (bridged lab network)</td></tr>
+        <tr><th>Operating system</th><td>RHEL {{ ansible_distribution_major_version | default('9') }}</td></tr>
+        <tr><th>Automation</th><td>Ansible Core — roles <code>common</code>, <code>webserver</code></td></tr>
+        <tr><th>Web tier</th><td>{{ web_stack }} (reverse-proxy ready pattern)</td></tr>
+        <tr><th>Firewall</th><td>firewalld — http / https</td></tr>
+        <tr><th>Source control</th><td>Git / GitHub (<code>Projects</code> repository)</td></tr>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Roadmap (cloud engineering path)</h2>
+      <ul class="evidence">
+        <li><strong>Current:</strong> on-prem style control plane + repeatable Linux web tier (this lab).</li>
+        <li><strong>Next:</strong> AWS — VPC, ALB, ASG, RDS, S3, CloudWatch (Project 1).</li>
+        <li><strong>Then:</strong> full stack as Terraform (<code>plan</code> / <code>apply</code>) with documented teardown (Project 2).</li>
+        <li><strong>Then:</strong> GitHub → CodeBuild → CodeDeploy pipeline with health-checked rollback (Project 3).</li>
+      </ul>
+      <p class="arch-note" style="margin-top: 0.85rem;">
+        Repository:
+        <a href="https://github.com/mrbobbyboykin/Projects" target="_blank" rel="noopener noreferrer">github.com/mrbobbyboykin/Projects</a>
+      </p>
+    </section>
+
     <footer>
-      Built for cloud / platform engineering portfolio practice · RHEL {{ ansible_distribution_major_version | default('9') }}
+      Portfolio lab · Linux+ &amp; Security+ foundation · NOC operations background · targeting cloud / platform engineering roles
     </footer>
   </div>
 </body>
