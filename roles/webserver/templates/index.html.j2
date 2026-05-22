@@ -82,32 +82,17 @@
       color: var(--text-muted);
     }
 
-    .arch-flow {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.5rem 0.35rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .arch-node {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      padding: 0.4rem 0.65rem;
+    .arch-diagram {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
       border-radius: 8px;
-      color: var(--text);
-      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
     }
 
-    .arch-node.highlight {
-      border-color: rgba(92, 156, 230, 0.5);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-    }
-
-    .arch-arrow { color: var(--accent); font-weight: 600; }
-
-    .arch-note {
+    .arch-caption {
       margin: 0.75rem 0 0;
       font-size: 0.88rem;
       color: var(--text-muted);
@@ -216,17 +201,14 @@
 
     <section class="card">
       <h2>Architecture</h2>
-      <div class="arch-flow" aria-label="Lab topology">
-        <span class="arch-node">Control-Node</span>
-        <span class="arch-arrow">→ SSH →</span>
-        <span class="arch-node">App-Node1</span>
-        <span class="arch-arrow">·</span>
-        <span class="arch-node">App-Node2</span>
-      </div>
-      <p class="arch-note">
-        <strong>GitHub</strong> (source of truth) → pull on control host →
-        <code>ansible-playbook playbooks/site.yml</code> →
-        <code>{{ web_stack }}</code> + <code>firewalld</code> (http/https) on each <code>[webservers]</code> host.
+      <img
+        class="arch-diagram"
+        src="/{{ lab_architecture_filename }}"
+        alt="Ansible lab architecture: Windows host, VirtualBox VMs, GitHub, Control-Node, App-Node1 and App-Node2"
+      />
+      <p class="arch-caption">
+        Same diagram as the project README: Windows <code>git push</code> → GitHub → Control-Node <code>git pull</code> and
+        <code>ansible-playbook</code> over SSH; browser <code>HTTP :80</code> to each app node running <code>{{ web_stack }}</code>.
       </p>
     </section>
 

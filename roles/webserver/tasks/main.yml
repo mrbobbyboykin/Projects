@@ -29,20 +29,38 @@
     state: enabled
   loop: "{{ web_firewall_services }}"
 
+- name: Deploy architecture diagram (nginx docroot)
+  ansible.builtin.copy:
+    src: "{{ lab_architecture_src }}"
+    dest: "{{ web_docroot_nginx }}/{{ lab_architecture_filename }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: web_stack == 'nginx'
+
 - name: Deploy index page (nginx docroot)
   ansible.builtin.template:
     src: index.html.j2
-    dest: /usr/share/nginx/html/index.html
+    dest: "{{ web_docroot_nginx }}/index.html"
     owner: root
     group: root
     mode: "0644"
   when: web_stack == 'nginx'
   notify: Reload nginx
 
+- name: Deploy architecture diagram (httpd docroot)
+  ansible.builtin.copy:
+    src: "{{ lab_architecture_src }}"
+    dest: "{{ web_docroot_httpd }}/{{ lab_architecture_filename }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: web_stack == 'httpd'
+
 - name: Deploy index page (httpd docroot)
   ansible.builtin.template:
     src: index.html.j2
-    dest: /var/www/html/index.html
+    dest: "{{ web_docroot_httpd }}/index.html"
     owner: root
     group: root
     mode: "0644"

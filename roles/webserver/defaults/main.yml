@@ -11,3 +11,8 @@ httpd_packages:
 web_firewall_services:
   - http
   - https
+
+web_docroot_nginx: /usr/share/nginx/html
+web_docroot_httpd: /var/www/html
+lab_architecture_src: "{{ playbook_dir }}/../docs/Ansible Lab Architecture.png"
+lab_architecture_filename: ansible-lab-architecture.png

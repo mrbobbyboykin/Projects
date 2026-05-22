@@ -68,28 +68,28 @@ Switch stacks per group or host by setting `web_stack` to `nginx` or `httpd`.
 ## Repository layout
 
 ```
-├── ansible.cfg
-├── collections/requirements.yml
+├── ansible.cfg                 # Defaults: inventory path, roles, forks
+├── collections/
+│   └── requirements.yml        # ansible.posix (firewalld module)
 ├── docs/
+│   ├── Ansible Lab Architecture.png
+│   ├── LAB-SETUP.md            # VM, SSH, Git workflow
+│   └── ROADMAP.md              # Week-by-week lab milestones
 ├── inventory/
-│   ├── hosts.ini
-│   └── group_vars/webservers.yml
+│   ├── hosts.ini               # App-Node1, App-Node2 targets
+│   └── group_vars/
+│       └── webservers.yml      # Shared vars (e.g. web_stack: nginx)
 ├── playbooks/
-│   └── site.yml
+│   └── site.yml                # Main entry: common + webserver roles
+├── roles/
+│   ├── common/                 # Baseline packages for managed nodes
+│   └── webserver/              # nginx/httpd, firewalld, index template
 ├── scripts/
-│   └── deploy.sh
-└── roles/
-    ├── common/
-    └── webserver/
+│   └── deploy.sh               # Wrapper for ansible-playbook
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
-Initialize Git on **Control-Node** (first meaningful commit after you personalize inventory):
-
-```bash
-git init
-git add .
-git commit -m "feat: ansible scaffold for multi-node web stack"
-```
-
-## Versioning (Git)
+**Git workflow:** edit and push from **Windows** (`Projects-git` clone). On **Control-Node**, `git pull` then run `ansible-playbook playbooks/site.yml`.
 
