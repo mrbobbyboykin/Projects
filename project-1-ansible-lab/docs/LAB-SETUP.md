@@ -47,8 +47,8 @@ sudo chmod 440 /etc/sudoers.d/ansible
 
 ```bash
 sudo dnf install -y git ansible-core
-git clone <your-repo-url> rhel-ansible-web-lab   # or copy this folder
-cd rhel-ansible-web-lab
+git clone https://github.com/mrbobbyboykin/Projects.git Ansible-Lab
+cd Ansible-Lab/project-1-ansible-lab
 ansible-galaxy collection install -r collections/requirements.yml
 ```
 

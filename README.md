@@ -1,95 +1,34 @@
-# RHEL Ansible Web Lab
+# Projects — Cloud & Platform Engineering Portfolio
 
-Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app nodes**, one playbook installs and enables **nginx or httpd**, manages **firewalld**, and drops a small templated homepage.
+Monorepo for hands-on labs and infrastructure projects. Each project lives in its own folder with a dedicated README, architecture diagram, and evidence (screenshots) where applicable.
 
-## Architecture
+## Projects
 
-![Ansible lab architecture](docs/Ansible%20Lab%20Architecture.png)
+| # | Folder | Status | Summary |
+|---|--------|--------|---------|
+| 1 | [project-1-ansible-lab](project-1-ansible-lab/) | **Complete** | Multi-node RHEL 9 web tier automated with Ansible (Control-Node + App-Node1/2, nginx, firewalld, Git workflow). |
+| 2 | [project-2-aws-infrastructure](project-2-aws-infrastructure/) | Planned | AWS VPC, ALB, ASG, RDS, S3, CloudWatch — then Terraform and CI/CD. |
 
-- **Windows 11 host**: developer workstation pushes playbooks to **GitHub** (`HTTPS git push`); browser tests **HTTP :80** on each app node.
-- **Control-Node** (VirtualBox): pulls the repo (`HTTPS git pull`), runs `ansible-playbook playbooks/site.yml`, and connects to app nodes over **SSH :22** (`ansible` user + key).
-- **App-Node1** and **App-Node2**: `[webservers]` targets running **nginx :80**, with **firewalld** (`http`/`https`) and a templated landing page per host.
+## Quick links (recruiters)
 
-## Prerequisites
-
-- Oracle VirtualBox on Windows 11; **three RHEL VMs** (Control-Node + App-Node1 + App-Node2).
-- SSH key-based auth from Control-Node to each app node (see `docs/LAB-SETUP.md`).
-- On **Control-Node**:
-
-```bash
-sudo dnf install -y git ansible-core
-ansible-galaxy collection install -r collections/requirements.yml
-```
-
-## Quick start (one-command deploy)
-
-From the repository root on **Control-Node**:
-
-```bash
-ansible-playbook playbooks/site.yml
-```
-
-Or:
-
-```bash
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh
-```
-
-Smoke test from your browser or `curl`:
-
-```bash
-curl -s http://192.168.1.160 | head
-curl -s http://192.168.1.161 | head
-```
-
-(Use the IPs from your `inventory/hosts.ini`.)
-
-### Parallel timing (two app nodes)
-
-Use enough forks (already set in `ansible.cfg`) and run:
-
-```bash
-time ansible-playbook playbooks/site.yml
-```
-
-**Note:** First run is slower while `dnf` caches populate; subsequent runs are what you quote on a resume (repeat runs after snapshots).
-
-## Configuration
-
-| Item | Location |
-|------|-----------|
-| Targets & IPs | `inventory/hosts.ini` |
-| Shared vars (e.g. nginx/httpd) | `inventory/group_vars/webservers.yml` |
-| Role defaults | `roles/webserver/defaults/main.yml` |
-
-Switch stacks per group or host by setting `web_stack` to `nginx` or `httpd`.
+- **Project 1 (Ansible lab):** [project-1-ansible-lab/README.md](project-1-ansible-lab/README.md)
+- **Project 1 architecture diagram:** [project-1-ansible-lab/docs/Ansible Lab Architecture.png](project-1-ansible-lab/docs/Ansible%20Lab%20Architecture.png)
+- **Project 1 milestone screenshots:** [project-1-ansible-lab/docs/](project-1-ansible-lab/docs/) (see `Milestone Screenshots` if present)
 
 ## Repository layout
 
 ```
-├── ansible.cfg                 # Defaults: inventory path, roles, forks
-├── collections/
-│   └── requirements.yml        # ansible.posix (firewalld module)
-├── docs/
-│   ├── Ansible Lab Architecture.png
-│   ├── LAB-SETUP.md            # VM, SSH, Git workflow
-│   └── ROADMAP.md              # Week-by-week lab milestones
-├── inventory/
-│   ├── hosts.ini               # App-Node1, App-Node2 targets
-│   └── group_vars/
-│       └── webservers.yml      # Shared vars (e.g. web_stack: nginx)
-├── playbooks/
-│   └── site.yml                # Main entry: common + webserver roles
-├── roles/
-│   ├── common/                 # Baseline packages for managed nodes
-│   └── webserver/              # nginx/httpd, firewalld, index template
-├── scripts/
-│   └── deploy.sh               # Wrapper for ansible-playbook
-├── .gitignore
-├── LICENSE
-└── README.md
+Projects/
+├── README.md                          ← you are here
+├── project-1-ansible-lab/             ← Ansible / RHEL automation lab
+└── project-2-aws-infrastructure/      ← AWS + Terraform (in progress)
 ```
 
-**Git workflow:** edit and push from **Windows** (`Projects-git` clone). On **Control-Node**, `git pull` then run `ansible-playbook playbooks/site.yml`.
+## How I work
 
+- **Windows:** edit, commit, and push from the `Projects-git` clone.
+- **Linux control host:** `git pull`, then run automation from the relevant project folder (e.g. `project-1-ansible-lab/`).
+
+## License
+
+See [project-1-ansible-lab/LICENSE](project-1-ansible-lab/LICENSE) (MIT).
