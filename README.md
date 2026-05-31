@@ -7,13 +7,14 @@ Monorepo for hands-on labs and infrastructure projects. Each project lives in it
 | # | Folder | Status | Summary |
 |---|--------|--------|---------|
 | 1 | [project-1-ansible-lab](project-1-ansible-lab/) | **Complete** | Multi-node RHEL 9 web tier automated with Ansible (Control-Node + App-Node1/2, nginx, firewalld, Git workflow). |
-| 2 | [project-2-aws-infrastructure](project-2-aws-infrastructure/) | Planned | AWS VPC, ALB, ASG, RDS, S3, CloudWatch — then Terraform and CI/CD. |
+| 2 | [project-2-aws-infrastructure](project-2-aws-infrastructure/) | **In progress** | AWS VPC foundation in Terraform; ALB, ASG, RDS, S3, CloudWatch modules stubbed. |
 
 ## Quick links (recruiters)
 
 - **Project 1 (Ansible lab):** [project-1-ansible-lab/README.md](project-1-ansible-lab/README.md)
 - **Project 1 architecture diagram:** [project-1-ansible-lab/docs/Ansible Lab Architecture.png](project-1-ansible-lab/docs/Ansible%20Lab%20Architecture.png)
 - **Project 1 milestone screenshots:** [project-1-ansible-lab/docs/](project-1-ansible-lab/docs/) (see `Milestone Screenshots` if present)
+- **Project 2 (AWS / Terraform):** [project-2-aws-infrastructure/README.md](project-2-aws-infrastructure/README.md)
 
 ## Repository layout
 

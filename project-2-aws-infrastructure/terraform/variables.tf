@@ -1,0 +1,73 @@
+variable "project_name" {
+  description = "Short name used in resource names and tags."
+  type        = string
+  default     = "portfolio-lab"
+}
+
+variable "environment" {
+  description = "Environment label (e.g. lab, dev)."
+  type        = string
+  default     = "lab"
+}
+
+variable "aws_region" {
+  description = "AWS region for all resources."
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC."
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "availability_zones" {
+  description = "Two AZs for multi-AZ subnet layout (must exist in aws_region)."
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
+}
+
+variable "public_subnet_cidrs" {
+  description = "One public subnet per AZ (ALB, NAT)."
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnet_cidrs" {
+  description = "One private subnet per AZ (app tier, RDS)."
+  type        = list(string)
+  default     = ["10.0.11.0/24", "10.0.12.0/24"]
+}
+
+variable "enable_nat_gateway" {
+  description = "Create a single NAT gateway for private subnet egress (lab cost control: one NAT)."
+  type        = bool
+  default     = true
+}
+
+# --- Phase 2 toggles (wire modules as you implement them) ---
+
+variable "enable_compute" {
+  description = "When true, create ALB + ASG module (not implemented yet)."
+  type        = bool
+  default     = false
+}
+
+variable "enable_rds" {
+  description = "When true, create RDS module (not implemented yet)."
+  type        = bool
+  default     = false
+}
+
+variable "enable_s3_static" {
+  description = "When true, create S3 static assets module (not implemented yet)."
+  type        = bool
+  default     = false
+}
+
+variable "enable_monitoring" {
+  description = "When true, create CloudWatch dashboards/alarms (not implemented yet)."
+  type        = bool
+  default     = false
+}

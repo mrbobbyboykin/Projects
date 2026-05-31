@@ -7,3 +7,11 @@
 *.log
 __pycache__/
 .venv/
+
+# Terraform (Project 2)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl

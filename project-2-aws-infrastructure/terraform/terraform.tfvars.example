@@ -1,0 +1,15 @@
+# Copy to terraform.tfvars and adjust. Never commit terraform.tfvars (gitignored).
+
+project_name = "portfolio-lab"
+environment  = "lab"
+aws_region   = "us-east-1"
+
+# Match AZs to your region:
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+# Phase 1: VPC only (safe starting point)
+enable_nat_gateway = true
+enable_compute     = false
+enable_rds         = false
+enable_s3_static   = false
+enable_monitoring  = false
