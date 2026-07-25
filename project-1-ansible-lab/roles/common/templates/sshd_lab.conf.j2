@@ -1,0 +1,7 @@
+# Managed by Ansible (project-1-ansible-lab / roles/common)
+# Drop-in only — main /etc/ssh/sshd_config is left intact (Include sshd_config.d/*.conf).
+
+PubkeyAuthentication yes
+PermitRootLogin {{ lab_ssh_permit_root_login }}
+PasswordAuthentication {{ 'yes' if lab_ssh_password_authentication | bool else 'no' }}
+KbdInteractiveAuthentication no

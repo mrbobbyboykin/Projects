@@ -58,3 +58,20 @@ ansible-galaxy collection install -r collections/requirements.yml
 - `ansible webservers -m ping` succeeds from the project directory on Control-Node.
 - This directory is a Git repo (`git init` / `git remote add` as needed).
 
+## SSH hardening (Ansible-managed) — safety notes
+
+The `common` role may install `/etc/ssh/sshd_config.d/99-ansible-lab.conf`. It does **not** replace `/etc/ssh/sshd_config`.
+
+- Existing `ansible` authorized keys are **not** wiped.
+- Password authentication stays **on** until you set `lab_ssh_password_authentication: false` in `inventory/group_vars/webservers.yml`.
+- Invalid configs are rolled back (`sshd -t` + remove drop-in).
+
+**Recovery via VirtualBox console** if SSH breaks:
+
+```bash
+sudo rm -f /etc/ssh/sshd_config.d/99-ansible-lab.conf
+sudo systemctl reload sshd
+```
+
+Optional: take a VirtualBox **snapshot** of each app node before the first harden run.
+

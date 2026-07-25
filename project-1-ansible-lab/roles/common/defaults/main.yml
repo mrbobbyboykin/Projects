@@ -1,0 +1,28 @@
+---
+# Base packages every lab node should have
+common_packages:
+  - chrony
+  - curl
+  - vim-enhanced
+  - rsync
+  - python3
+  - python3-libselinux
+
+common_timezone: America/New_York
+
+# Automation / admin account (matches inventory ansible_user)
+lab_admin_user: ansible
+lab_admin_shell: /bin/bash
+lab_admin_groups: []
+
+# Optional: paste your Control-Node public key here (or in group_vars).
+# Leave empty to leave existing authorized_keys untouched.
+# Example: "ssh-ed25519 AAAA... ansible@Control-Node"
+lab_admin_pubkey: ""
+
+# SSH hardening via drop-in only (does not replace /etc/ssh/sshd_config)
+lab_harden_ssh: true
+# Keep true until you confirm key login works after a harden run, then set false.
+lab_ssh_password_authentication: true
+lab_ssh_permit_root_login: "no"
+lab_sshd_dropin_path: /etc/ssh/sshd_config.d/99-ansible-lab.conf

@@ -32,3 +32,16 @@
 | Meaningful Git commits | Small commits per concern (inventory vs role vs docs). |
 | Version tags | `v1.0.0`, `v2.0.0` per README |
 | **Scenario:** “Provision 2 web servers quickly” | `time ansible-playbook …` after warm cache; `forks` in `ansible.cfg` |
+
+## Weeks 7+ — Linux admin automation (baseline)
+
+| Task | Repo |
+|------|------|
+| Common packages + chrony/timezone | `roles/common/tasks/main.yml` |
+| Admin user + sudoers.d | same (`lab_admin_user`) |
+| Safe SSH drop-in (`sshd_config.d`) | `roles/common/templates/sshd_lab.conf.j2` |
+| Rolling patch playbook | `playbooks/patch.yml` |
+| Tags | `--tags common`, `--tags ssh`, etc. |
+| **Deliverable:** baseline without breaking SSH | `ansible webservers -m ping` after `site.yml` |
+| Stretch: disable password auth | `lab_ssh_password_authentication: false` after verifying keys |
+| Stretch: SELinux / logrotate | Future common-role tasks |

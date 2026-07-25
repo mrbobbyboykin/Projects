@@ -2,7 +2,7 @@
 
 [← Back to portfolio index](../README.md)
 
-Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app nodes**, one playbook installs and enables **nginx or httpd**, manages **firewalld**, and drops a templated homepage.
+Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app nodes**. Playbooks apply a **baseline common role** (packages, chrony/timezone, admin user/sudo, safe SSH drop-in) plus **nginx/httpd**, **firewalld**, and a templated homepage. A separate **patch** playbook demonstrates rolling updates.
 
 ## Architecture
 
@@ -65,10 +65,52 @@ time ansible-playbook playbooks/site.yml
 | Item | Location |
 |------|-----------|
 | Targets & IPs | `inventory/hosts.ini` |
-| Shared vars (e.g. nginx/httpd) | `inventory/group_vars/webservers.yml` |
-| Role defaults | `roles/webserver/defaults/main.yml` |
+| Shared vars (web stack, SSH, timezone) | `inventory/group_vars/webservers.yml` |
+| Common role defaults | `roles/common/defaults/main.yml` |
+| Web role defaults | `roles/webserver/defaults/main.yml` |
 
 Switch stacks per group or host by setting `web_stack` to `nginx` or `httpd`.
+
+### Baseline + tags
+
+```bash
+# Full site (common + webserver)
+ansible-playbook playbooks/site.yml
+
+# Baseline only (packages, chrony, users/sudo, SSH drop-in)
+ansible-playbook playbooks/site.yml --tags common
+
+# Patch playbook (rolling, one host at a time; reboot off by default)
+ansible-playbook playbooks/patch.yml --check
+ansible-playbook playbooks/patch.yml
+# Optional reboot after updates:
+ansible-playbook playbooks/patch.yml -e patch_reboot=true
+```
+
+### SSH hardening — will it break existing access?
+
+**Designed not to**, with these safeguards:
+
+| Safeguard | Behavior |
+|-----------|----------|
+| Drop-in only | Writes `/etc/ssh/sshd_config.d/99-ansible-lab.conf` — does **not** replace main `sshd_config` |
+| Existing keys | Does **not** wipe `~ansible/.ssh/authorized_keys` (`exclusive: false`) |
+| Password auth | Stays **enabled** by default (`lab_ssh_password_authentication: true`) until you turn it off |
+| Validate + rollback | Runs `sshd -t`; removes the drop-in and fails the play if config is invalid |
+| Order | Ensures `ansible` user + sudo exist **before** touching sshd |
+
+After a successful run and you confirm `ansible webservers -m ping` still works, you can set in `group_vars/webservers.yml`:
+
+```yaml
+lab_ssh_password_authentication: false
+```
+
+If SSH ever breaks, use the **VirtualBox console** on the app VM, remove the drop-in, and reload sshd:
+
+```bash
+sudo rm -f /etc/ssh/sshd_config.d/99-ansible-lab.conf
+sudo systemctl reload sshd
+```
 
 ## Repository layout
 
@@ -89,9 +131,10 @@ project-1-ansible-lab/
 │   └── group_vars/
 │       └── webservers.yml      # Shared vars (e.g. web_stack: nginx)
 ├── playbooks/
-│   └── site.yml                # Main entry: common + webserver roles
+│   ├── site.yml                # Main entry: common + webserver roles
+│   └── patch.yml               # Rolling dnf updates (serial: 1)
 ├── roles/
-│   ├── common/                 # Baseline packages for managed nodes
+│   ├── common/                 # Packages, chrony, user/sudo, SSH drop-in
 │   └── webserver/              # nginx/httpd, firewalld, index template
 ├── scripts/
 │   └── deploy.sh               # Wrapper for ansible-playbook

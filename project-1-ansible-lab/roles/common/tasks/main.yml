@@ -1,7 +1,153 @@
 ---
-- name: Ensure base packages for Ansible facts/modules are present
+- name: Install common packages
   ansible.builtin.package:
-    name:
-      - python3
-      - python3-libselinux
+    name: "{{ common_packages }}"
     state: present
+  tags:
+    - common
+    - packages
+
+- name: Get current timezone
+  ansible.builtin.command: timedatectl show -p Timezone --value
+  register: current_timezone
+  changed_when: false
+  check_mode: false
+  tags:
+    - common
+    - chrony
+
+- name: Set system timezone
+  ansible.builtin.command: timedatectl set-timezone {{ common_timezone }}
+  when: current_timezone.stdout != common_timezone
+  tags:
+    - common
+    - chrony
+
+- name: Enable and start chronyd
+  ansible.builtin.service:
+    name: chronyd
+    state: started
+    enabled: true
+  tags:
+    - common
+    - chrony
+
+- name: Ensure lab admin user exists
+  ansible.builtin.user:
+    name: "{{ lab_admin_user }}"
+    shell: "{{ lab_admin_shell }}"
+    groups: "{{ lab_admin_groups }}"
+    append: true
+    create_home: true
+    state: present
+  tags:
+    - common
+    - users
+
+- name: Ensure lab admin .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ lab_admin_user }}/.ssh"
+    state: directory
+    owner: "{{ lab_admin_user }}"
+    group: "{{ lab_admin_user }}"
+    mode: "0700"
+  tags:
+    - common
+    - users
+    - ssh
+
+- name: Install lab admin authorized key (additive — does not wipe existing keys)
+  ansible.posix.authorized_key:
+    user: "{{ lab_admin_user }}"
+    key: "{{ lab_admin_pubkey }}"
+    state: present
+    exclusive: false
+  when: lab_admin_pubkey | length > 0
+  tags:
+    - common
+    - users
+    - ssh
+
+- name: Install passwordless sudo for lab admin
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ lab_admin_user }}"
+    content: |
+      {{ lab_admin_user }} ALL=(ALL) NOPASSWD:ALL
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"
+  tags:
+    - common
+    - users
+    - sudo
+
+# SSH: drop-in only. Never replace /etc/ssh/sshd_config.
+# Password auth stays ON by default so you are not locked out if a key breaks.
+- name: Deploy SSH hardening drop-in
+  ansible.builtin.template:
+    src: sshd_lab.conf.j2
+    dest: "{{ lab_sshd_dropin_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: lab_harden_ssh | bool
+  register: sshd_dropin
+  tags:
+    - common
+    - ssh
+    - harden
+
+- name: Validate full sshd configuration after drop-in change
+  ansible.builtin.command: /usr/sbin/sshd -t
+  register: sshd_test
+  failed_when: false
+  changed_when: false
+  when:
+    - lab_harden_ssh | bool
+    - sshd_dropin is changed
+  tags:
+    - common
+    - ssh
+    - harden
+
+- name: Remove invalid SSH drop-in (rollback)
+  ansible.builtin.file:
+    path: "{{ lab_sshd_dropin_path }}"
+    state: absent
+  when:
+    - lab_harden_ssh | bool
+    - sshd_dropin is changed
+    - sshd_test.rc is defined
+    - sshd_test.rc != 0
+  tags:
+    - common
+    - ssh
+    - harden
+
+- name: Fail play if sshd configuration is invalid
+  ansible.builtin.fail:
+    msg: "sshd -t failed after writing {{ lab_sshd_dropin_path }}: {{ sshd_test.stderr | default(sshd_test.stdout) }}"
+  when:
+    - lab_harden_ssh | bool
+    - sshd_dropin is changed
+    - sshd_test.rc is defined
+    - sshd_test.rc != 0
+  tags:
+    - common
+    - ssh
+    - harden
+
+- name: Reload sshd after valid drop-in change
+  ansible.builtin.service:
+    name: sshd
+    state: reloaded
+  when:
+    - lab_harden_ssh | bool
+    - sshd_dropin is changed
+    - sshd_test.rc is defined
+    - sshd_test.rc == 0
+  tags:
+    - common
+    - ssh
+    - harden

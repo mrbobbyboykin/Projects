@@ -1,0 +1,32 @@
+---
+# Rolling OS updates for lab webservers. Prefer --check first.
+#
+#   ansible-playbook playbooks/patch.yml --check
+#   ansible-playbook playbooks/patch.yml
+#
+# Reboot only when patch_reboot is true (default false).
+- name: Apply package updates on lab web servers
+  hosts: webservers
+  become: true
+  serial: 1
+  vars:
+    patch_reboot: false
+  tags:
+    - patch
+
+  tasks:
+    - name: Upgrade all packages (dnf)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      register: package_upgrade
+
+    - name: Reboot host after updates
+      ansible.builtin.reboot:
+        msg: Reboot initiated by Ansible patch playbook
+        reboot_timeout: 600
+      when:
+        - patch_reboot | bool
+        - package_upgrade is changed
+      tags:
+        - reboot

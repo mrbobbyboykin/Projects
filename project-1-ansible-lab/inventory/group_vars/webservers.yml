@@ -2,3 +2,16 @@
 # Shared variables for all nodes in [webservers]
 
 web_stack: nginx
+
+# --- common role (users / SSH / chrony) ---
+common_timezone: America/New_York
+
+# Leave empty to keep existing authorized_keys as-is (recommended at first).
+# To manage the key from Ansible, paste Control-Node pubkey:
+#   lab_admin_pubkey: "ssh-ed25519 AAAA... comment"
+lab_admin_pubkey: ""
+
+# Safe defaults: harden via drop-in, but keep password auth until you verify keys.
+lab_harden_ssh: true
+lab_ssh_password_authentication: true
+lab_ssh_permit_root_login: "no"
