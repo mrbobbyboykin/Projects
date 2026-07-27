@@ -1,0 +1,13 @@
+# Managed by Ansible (project-1-ansible-lab / roles/common)
+/var/log/nginx/*.log {
+    weekly
+    rotate 4
+    missingok
+    notifempty
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+        /bin/kill -USR1 `cat /run/nginx.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}

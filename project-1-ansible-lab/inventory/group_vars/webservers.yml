@@ -15,3 +15,7 @@ lab_admin_pubkey: ""
 lab_harden_ssh: true
 lab_ssh_password_authentication: true
 lab_ssh_permit_root_login: "no"
+
+# SELinux / logrotate stretch
+lab_selinux_state: enforcing
+lab_manage_logrotate: true

@@ -1,0 +1,22 @@
+---
+- name: Ensure logrotate is installed
+  ansible.builtin.package:
+    name: logrotate
+    state: present
+  when: lab_manage_logrotate | bool
+  tags:
+    - common
+    - logrotate
+    - packages
+
+- name: Deploy nginx logrotate drop-in
+  ansible.builtin.template:
+    src: nginx-lab.logrotate.j2
+    dest: "{{ lab_logrotate_nginx_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: lab_manage_logrotate | bool
+  tags:
+    - common
+    - logrotate

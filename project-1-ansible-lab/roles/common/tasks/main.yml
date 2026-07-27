@@ -151,3 +151,25 @@
     - common
     - ssh
     - harden
+
+- name: Include SELinux tasks
+  ansible.builtin.include_tasks:
+    file: selinux.yml
+    apply:
+      tags:
+        - common
+        - selinux
+  tags:
+    - common
+    - selinux
+
+- name: Include logrotate tasks
+  ansible.builtin.include_tasks:
+    file: logrotate.yml
+    apply:
+      tags:
+        - common
+        - logrotate
+  tags:
+    - common
+    - logrotate

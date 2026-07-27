@@ -77,8 +77,12 @@ Switch stacks per group or host by setting `web_stack` to `nginx` or `httpd`.
 # Full site (common + webserver)
 ansible-playbook playbooks/site.yml
 
-# Baseline only (packages, chrony, users/sudo, SSH drop-in)
+# Baseline only (packages, chrony, users/sudo, SSH, SELinux, logrotate)
 ansible-playbook playbooks/site.yml --tags common
+
+# SELinux or logrotate only
+ansible-playbook playbooks/site.yml --tags selinux
+ansible-playbook playbooks/site.yml --tags logrotate
 
 # Patch playbook (rolling, one host at a time; reboot off by default)
 ansible-playbook playbooks/patch.yml --check

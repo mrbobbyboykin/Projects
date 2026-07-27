@@ -44,4 +44,6 @@
 | Tags | `--tags common`, `--tags ssh`, etc. |
 | **Deliverable:** baseline without breaking SSH | `ansible webservers -m ping` after `site.yml` |
 | Stretch: disable password auth | `lab_ssh_password_authentication: false` after verifying keys |
-| Stretch: SELinux / logrotate | Future common-role tasks |
+| SELinux enforcing + tools | `roles/common/tasks/selinux.yml` |
+| restorecon on web docroot | `roles/webserver/tasks/main.yml` |
+| nginx logrotate drop-in | `roles/common/tasks/logrotate.yml` |

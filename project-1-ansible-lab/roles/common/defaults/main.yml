@@ -26,3 +26,17 @@ lab_harden_ssh: true
 lab_ssh_password_authentication: true
 lab_ssh_permit_root_login: "no"
 lab_sshd_dropin_path: /etc/ssh/sshd_config.d/99-ansible-lab.conf
+
+# SELinux stretch — keep RHEL in a known, enforceable state for the lab.
+# Modes: enforcing | permissive | disabled
+lab_selinux_state: enforcing
+lab_selinux_policy: targeted
+
+lab_selinux_packages:
+  - policycoreutils
+  - policycoreutils-python-utils
+  - python3-libselinux
+
+# logrotate stretch — rotate nginx access/error logs weekly
+lab_manage_logrotate: true
+lab_logrotate_nginx_path: /etc/logrotate.d/nginx-lab

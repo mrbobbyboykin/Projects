@@ -48,6 +48,16 @@
   when: web_stack == 'nginx'
   notify: Reload nginx
 
+- name: Restore SELinux contexts on nginx docroot
+  ansible.builtin.command:
+    cmd: restorecon -Rv {{ web_docroot_nginx }}
+  register: nginx_restorecon
+  changed_when: "'Relabeled' in nginx_restorecon.stdout"
+  when: web_stack == 'nginx'
+  tags:
+    - selinux
+    - webserver
+
 - name: Deploy architecture diagram (httpd docroot)
   ansible.builtin.copy:
     src: "{{ lab_architecture_src }}"
@@ -66,6 +76,16 @@
     mode: "0644"
   when: web_stack == 'httpd'
   notify: Reload httpd
+
+- name: Restore SELinux contexts on httpd docroot
+  ansible.builtin.command:
+    cmd: restorecon -Rv {{ web_docroot_httpd }}
+  register: httpd_restorecon
+  changed_when: "'Relabeled' in httpd_restorecon.stdout"
+  when: web_stack == 'httpd'
+  tags:
+    - selinux
+    - webserver
 
 - name: Enable and start nginx
   ansible.builtin.service:

@@ -1,0 +1,23 @@
+---
+# SELinux stretch goal:
+# 1) Install management tools
+# 2) Ensure policy type (targeted)
+# 3) Set mode (default: enforcing)
+# Does NOT disable SELinux — that would hide real RHEL admin skills.
+
+- name: Install SELinux management packages
+  ansible.builtin.package:
+    name: "{{ lab_selinux_packages }}"
+    state: present
+  tags:
+    - common
+    - selinux
+    - packages
+
+- name: Configure SELinux policy and state
+  ansible.posix.selinux:
+    policy: "{{ lab_selinux_policy }}"
+    state: "{{ lab_selinux_state }}"
+  tags:
+    - common
+    - selinux
