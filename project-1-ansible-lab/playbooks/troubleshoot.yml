@@ -1,0 +1,170 @@
+---
+# Multi-node troubleshooting snapshot for lab webservers.
+#
+#   ansible-playbook playbooks/troubleshoot.yml
+#
+# Read-only checks (changed_when: false). Does not modify hosts.
+- name: Troubleshoot lab web servers
+  hosts: webservers
+  become: true
+  gather_facts: true
+  tags:
+    - troubleshoot
+
+  tasks:
+    - name: System identity and uptime
+      ansible.builtin.command: uptime
+      register: uptime_out
+      changed_when: false
+      tags:
+        - health
+
+    - name: Show host summary
+      ansible.builtin.debug:
+        msg:
+          - "host={{ inventory_hostname }}  ip={{ ansible_default_ipv4.address | default('n/a') }}"
+          - "os={{ ansible_distribution }} {{ ansible_distribution_version }}  kernel={{ ansible_kernel }}"
+          - "uptime={{ uptime_out.stdout }}"
+          - "cpu_cores={{ ansible_processor_vcpus | default(ansible_processor_cores) }}  mem_mb={{ ansible_memtotal_mb }}  mem_free_mb={{ ansible_memfree_mb }}"
+      tags:
+        - health
+
+    - name: Disk usage (human)
+      ansible.builtin.command: df -hT -x tmpfs -x devtmpfs
+      register: disk_out
+      changed_when: false
+      tags:
+        - health
+        - disk
+
+    - name: Show disk usage
+      ansible.builtin.debug:
+        var: disk_out.stdout_lines
+      tags:
+        - health
+        - disk
+
+    - name: Memory and pressure (free -m)
+      ansible.builtin.command: free -m
+      register: mem_out
+      changed_when: false
+      tags:
+        - health
+        - memory
+
+    - name: Show memory
+      ansible.builtin.debug:
+        var: mem_out.stdout_lines
+      tags:
+        - health
+        - memory
+
+    - name: Top CPU processes
+      ansible.builtin.shell: |
+        set -o pipefail
+        ps -eo pid,user,pcpu,pmem,comm --sort=-pcpu | head -n 8
+      args:
+        executable: /bin/bash
+      register: cpu_out
+      changed_when: false
+      tags:
+        - health
+        - cpu
+
+    - name: Show top CPU processes
+      ansible.builtin.debug:
+        var: cpu_out.stdout_lines
+      tags:
+        - health
+        - cpu
+
+    - name: Check critical services
+      ansible.builtin.command: systemctl is-active {{ item }}
+      register: svc_out
+      changed_when: false
+      failed_when: false
+      loop:
+        - sshd
+        - chronyd
+        - firewalld
+        - nginx
+      tags:
+        - services
+
+    - name: Show service status
+      ansible.builtin.debug:
+        msg: "{{ item.item }}={{ item.stdout | default(item.msg) | default('unknown') }} (rc={{ item.rc }})"
+      loop: "{{ svc_out.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      tags:
+        - services
+
+    - name: Listening TCP ports (ss)
+      ansible.builtin.shell: |
+        set -o pipefail
+        ss -tulpn | head -n 25
+      args:
+        executable: /bin/bash
+      register: listen_out
+      changed_when: false
+      tags:
+        - network
+
+    - name: Show listening ports
+      ansible.builtin.debug:
+        var: listen_out.stdout_lines
+      tags:
+        - network
+
+    - name: SELinux mode
+      ansible.builtin.command: getenforce
+      register: selinux_out
+      changed_when: false
+      failed_when: false
+      tags:
+        - security
+        - selinux
+
+    - name: Recent failed SSH / auth lines
+      ansible.builtin.shell: |
+        set -o pipefail
+        if [ -f /var/log/secure ]; then
+          grep -E 'Failed password|Invalid user|authentication failure' /var/log/secure | tail -n 15 || true
+        else
+          journalctl -u sshd --no-pager -n 30 | grep -Ei 'fail|invalid|error' || true
+        fi
+      args:
+        executable: /bin/bash
+      register: auth_out
+      changed_when: false
+      tags:
+        - security
+
+    - name: Recent SELinux AVC denials (if any)
+      ansible.builtin.shell: |
+        set -o pipefail
+        if command -v ausearch >/dev/null 2>&1; then
+          ausearch -m avc -ts recent 2>/dev/null | tail -n 20 || echo "(no recent AVC denials or audit idle)"
+        else
+          journalctl -t setroubleshoot --no-pager -n 15 2>/dev/null || echo "(ausearch not installed)"
+        fi
+      args:
+        executable: /bin/bash
+      register: avc_out
+      changed_when: false
+      tags:
+        - security
+        - selinux
+
+    - name: Show security skim
+      ansible.builtin.debug:
+        msg:
+          - "selinux={{ selinux_out.stdout | default('n/a') }}"
+          - "=== auth / ssh failures (tail) ==="
+          - "{{ auth_out.stdout_lines | default(['(none)']) }}"
+          - "=== SELinux AVC (tail) ==="
+          - "{{ avc_out.stdout_lines | default(['(none)']) }}"
+      tags:
+        - security
+        - selinux

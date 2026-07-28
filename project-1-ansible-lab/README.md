@@ -2,7 +2,7 @@
 
 [← Back to portfolio index](../README.md)
 
-Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app nodes**. Playbooks apply a **baseline common role** (packages, chrony/timezone, admin user/sudo, safe SSH drop-in) plus **nginx/httpd**, **firewalld**, and a templated homepage. A separate **patch** playbook demonstrates rolling updates.
+Portfolio-oriented automation lab: **Ansible control host → multiple RHEL app nodes**. Playbooks apply a **baseline common role** (packages, chrony/timezone, admin user/sudo, safe SSH drop-in, SELinux, logrotate) plus **nginx/httpd**, **firewalld**, and a templated homepage. Separate playbooks cover **rolling patches** and **read-only troubleshooting** snapshots.
 
 ## Architecture
 
@@ -91,6 +91,29 @@ ansible-playbook playbooks/patch.yml
 ansible-playbook playbooks/patch.yml -e patch_reboot=true
 ```
 
+### Troubleshooting (read-only)
+
+Multi-node snapshot (CPU/memory/disk, services, ports, SELinux, auth failures):
+
+```bash
+ansible-playbook playbooks/troubleshoot.yml
+# or:
+chmod +x scripts/troubleshoot.sh
+./scripts/troubleshoot.sh
+
+# Tag subsets:
+ansible-playbook playbooks/troubleshoot.yml --tags health
+ansible-playbook playbooks/troubleshoot.yml --tags security
+```
+
+Single-host scripts (run on Control-Node or an App-Node):
+
+```bash
+chmod +x scripts/health-check.sh scripts/security-skim.sh
+sudo ./scripts/health-check.sh
+sudo ./scripts/security-skim.sh
+```
+
 ### SSH hardening — will it break existing access?
 
 **Designed not to**, with these safeguards:
@@ -136,12 +159,16 @@ project-1-ansible-lab/
 │       └── webservers.yml      # Shared vars (e.g. web_stack: nginx)
 ├── playbooks/
 │   ├── site.yml                # Main entry: common + webserver roles
-│   └── patch.yml               # Rolling dnf updates (serial: 1)
+│   ├── patch.yml               # Rolling dnf updates (serial: 1)
+│   └── troubleshoot.yml        # Read-only health / security snapshot
 ├── roles/
-│   ├── common/                 # Packages, chrony, user/sudo, SSH drop-in
+│   ├── common/                 # Packages, chrony, user/sudo, SSH, SELinux, logrotate
 │   └── webserver/              # nginx/httpd, firewalld, index template
 ├── scripts/
-│   └── deploy.sh               # Wrapper for ansible-playbook
+│   ├── deploy.sh               # Wrapper for site.yml
+│   ├── troubleshoot.sh         # Wrapper for troubleshoot.yml
+│   ├── health-check.sh         # Local CPU/mem/disk snapshot
+│   └── security-skim.sh        # Local auth failures + SELinux skim
 ├── LICENSE
 └── README.md
 ```

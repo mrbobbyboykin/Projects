@@ -47,3 +47,5 @@
 | SELinux enforcing + tools | `roles/common/tasks/selinux.yml` |
 | restorecon on web docroot | `roles/webserver/tasks/main.yml` |
 | nginx logrotate drop-in | `roles/common/tasks/logrotate.yml` |
+| Troubleshoot playbook (read-only) | `playbooks/troubleshoot.yml` |
+| Local health / security scripts | `scripts/health-check.sh`, `scripts/security-skim.sh` |
