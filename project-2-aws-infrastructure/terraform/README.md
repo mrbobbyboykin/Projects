@@ -23,9 +23,9 @@ Copy example vars:
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Module implementation order suggested:
+Module implementation order:
 
 1. `modules/vpc` — done  
-2. `modules/alb` + `modules/asg`  
+2. `modules/alb` + `modules/asg` — done  
 3. `modules/rds`  
 4. `modules/s3` + `modules/cloudwatch`
