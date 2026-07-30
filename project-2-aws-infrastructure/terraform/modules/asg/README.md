@@ -1,12 +1,28 @@
 # Auto Scaling module (Phase 2)
 
-Planned resources:
+Launches Amazon Linux 2023 instances behind the ALB target group, with nginx via user-data.
 
-- Launch template (Amazon Linux 2023 or custom AMI)
-- `aws_autoscaling_group` in **private subnets**
-- Target tracking or step scaling on **CPU** (document policy choice in README)
-- Security group: allow app port from ALB SG only
+## Resources
 
-Expected inputs: `private_subnet_ids`, `target_group_arn`, `alb_security_group_id`
+- App security group (app port **only** from ALB SG)
+- IAM instance profile + **SSM** managed policy (Session Manager, no SSH key required)
+- Launch template (AL2023, user-data installs nginx)
+- Auto Scaling Group (ELB health checks)
+- Target-tracking scaling policy (CPU ~50%)
 
-Expected outputs: `asg_name`, `security_group_id`
+## Lab networking note
+
+| Mode | Subnets | Public IP | When |
+|------|---------|-----------|------|
+| Cost-control (default) | **Public** | Yes | `enable_nat_gateway = false` |
+| Production-like | **Private** | No | `enable_nat_gateway = true` |
+
+Root module picks subnet IDs and `associate_public_ip` from the NAT toggle.
+
+## Inputs
+
+`vpc_id`, `subnet_ids`, `target_group_arn`, `alb_security_group_id`, sizing vars, `associate_public_ip`
+
+## Outputs
+
+`asg_name`, `security_group_id`, `launch_template_id`

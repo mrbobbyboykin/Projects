@@ -46,13 +46,42 @@ variable "enable_nat_gateway" {
   default     = true
 }
 
-# --- Phase 2 toggles (wire modules as you implement them) ---
+# --- Phase 2: ALB + ASG ---
 
 variable "enable_compute" {
-  description = "When true, create ALB + ASG module (not implemented yet)."
+  description = "When true, create ALB + ASG (Phase 2)."
   type        = bool
   default     = false
 }
+
+variable "app_port" {
+  description = "Application / target group port."
+  type        = number
+  default     = 80
+}
+
+variable "instance_type" {
+  description = "EC2 instance type for ASG (free-tier friendly default)."
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "asg_min_size" {
+  type    = number
+  default = 1
+}
+
+variable "asg_max_size" {
+  type    = number
+  default = 2
+}
+
+variable "asg_desired_capacity" {
+  type    = number
+  default = 2
+}
+
+# --- Later phase toggles ---
 
 variable "enable_rds" {
   description = "When true, create RDS module (not implemented yet)."

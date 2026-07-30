@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+dnf update -y
+dnf install -y nginx
+systemctl enable --now nginx
+
+HOSTNAME=$(hostname -f 2>/dev/null || hostname)
+cat >/usr/share/nginx/html/index.html <<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>${project_name} — ${environment}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; }
+    code { background: #f4f4f4; padding: 0.15rem 0.35rem; }
+  </style>
+</head>
+<body>
+  <h1>${project_name} / ${environment}</h1>
+  <p>Served by Auto Scaling instance <code>$${HOSTNAME}</code>.</p>
+  <p>Reached via Application Load Balancer (Terraform Phase 2).</p>
+</body>
+</html>
+EOF

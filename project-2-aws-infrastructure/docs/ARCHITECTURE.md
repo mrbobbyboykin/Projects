@@ -44,11 +44,15 @@ flowchart TB
 
 | Phase | Module | Status |
 |-------|--------|--------|
-| 1 | `modules/vpc` | **Scaffold — ready to plan/apply** |
-| 2 | `modules/alb`, `modules/asg` | Stub (README only) |
+| 1 | `modules/vpc` | **Implemented** |
+| 2 | `modules/alb`, `modules/asg` | **Implemented** |
 | 3 | `modules/rds` | Stub |
 | 4 | `modules/s3`, `modules/cloudwatch` | Stub |
 | 5 | Remote state (S3 + DynamoDB lock) | Commented in `versions.tf` |
+
+### Phase 2 lab networking
+
+With `enable_nat_gateway = false` (default for cost control), the ASG is placed in **public** subnets with public IPs so user-data can install packages. Set `enable_nat_gateway = true` to place the ASG in **private** subnets (production-like).
 
 ## Relationship to Project 1
 
