@@ -81,13 +81,31 @@ variable "asg_desired_capacity" {
   default = 2
 }
 
-# --- Later phase toggles ---
+# --- Phase 3: RDS ---
 
 variable "enable_rds" {
-  description = "When true, create RDS module (not implemented yet)."
+  description = "When true, create RDS (requires enable_compute for app SG)."
   type        = bool
   default     = false
 }
+
+variable "rds_multi_az" {
+  description = "Multi-AZ RDS standby. Keep false for cheap lab runs."
+  type        = bool
+  default     = false
+}
+
+variable "db_instance_class" {
+  type    = string
+  default = "db.t3.micro"
+}
+
+variable "db_allocated_storage" {
+  type    = number
+  default = 20
+}
+
+# --- Phase 4 toggles ---
 
 variable "enable_s3_static" {
   description = "When true, create S3 static assets module (not implemented yet)."

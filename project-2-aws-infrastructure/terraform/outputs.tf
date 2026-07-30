@@ -33,6 +33,24 @@ output "asg_name" {
   value       = var.enable_compute ? module.asg[0].asg_name : null
 }
 
+output "rds_endpoint" {
+  description = "RDS endpoint hostname (null if RDS disabled)."
+  value       = var.enable_rds && var.enable_compute ? module.rds[0].endpoint : null
+}
+
+output "rds_port" {
+  value = var.enable_rds && var.enable_compute ? module.rds[0].port : null
+}
+
+output "rds_master_username" {
+  value = var.enable_rds && var.enable_compute ? module.rds[0].master_username : null
+}
+
+output "rds_master_password" {
+  description = "Sensitive — use: terraform output -raw rds_master_password"
+  value       = var.enable_rds && var.enable_compute ? module.rds[0].master_password : null
+  sensitive   = true
+}
+
 # Uncomment as modules are implemented:
-# output "rds_endpoint" { value = module.rds[0].endpoint }
 # output "s3_bucket_name" { value = module.s3_static[0].bucket_name }

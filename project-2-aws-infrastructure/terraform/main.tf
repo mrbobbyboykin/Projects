@@ -50,18 +50,22 @@ module "asg" {
   associate_public_ip   = local.asg_associate_public_ip
 }
 
-# --- Phase 3+ stubs (uncomment when modules are ready) ---
+# Phase 3: RDS in private subnets. Requires enable_compute so the app SG exists.
+module "rds" {
+  count  = var.enable_rds && var.enable_compute ? 1 : 0
+  source = "./modules/rds"
 
-# module "rds" {
-#   count  = var.enable_rds ? 1 : 0
-#   source = "./modules/rds"
-#
-#   project_name          = var.project_name
-#   environment           = var.environment
-#   vpc_id                = module.vpc.vpc_id
-#   private_subnet_ids    = module.vpc.private_subnet_ids
-#   app_security_group_id = module.asg[0].security_group_id
-# }
+  project_name          = var.project_name
+  environment           = var.environment
+  vpc_id                = module.vpc.vpc_id
+  private_subnet_ids    = module.vpc.private_subnet_ids
+  app_security_group_id = module.asg[0].security_group_id
+  db_instance_class     = var.db_instance_class
+  db_allocated_storage  = var.db_allocated_storage
+  multi_az              = var.rds_multi_az
+}
+
+# --- Phase 4 stubs ---
 
 # module "s3_static" {
 #   count  = var.enable_s3_static ? 1 : 0

@@ -46,9 +46,15 @@ flowchart TB
 |-------|--------|--------|
 | 1 | `modules/vpc` | **Implemented** |
 | 2 | `modules/alb`, `modules/asg` | **Implemented** |
-| 3 | `modules/rds` | Stub |
+| 3 | `modules/rds` | **Implemented (Single-AZ default)** |
 | 4 | `modules/s3`, `modules/cloudwatch` | Stub |
 | 5 | Remote state (S3 + DynamoDB lock) | Commented in `versions.tf` |
+
+### Phase 3 RDS
+
+- Private subnets, not publicly accessible  
+- DB port allowed **only** from the app security group (`enable_compute` required)  
+- Default: **`rds_multi_az = false`** (`db.t3.micro`). Set `true` briefly to demo Multi-AZ, then destroy.
 
 ### Phase 2 lab networking
 

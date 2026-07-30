@@ -21,7 +21,7 @@ project-2-aws-infrastructure/
         ├── vpc/                     # Phase 1 — multi-AZ VPC
         ├── alb/                     # Phase 2 — Application Load Balancer
         ├── asg/                     # Phase 2 — Auto Scaling Group (nginx)
-        ├── rds/                     # Phase 3 stub
+        ├── rds/                     # Phase 3 — RDS MySQL (Single-AZ default)
         ├── s3/                      # Phase 4 stub
         └── cloudwatch/              # Phase 4 stub
 ```
@@ -32,5 +32,6 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full diagram and securi
 
 - **Phase 1 (done):** Multi-AZ VPC with public/private subnets, Internet Gateway, and route tables (Terraform).
 - **Phase 2 (done):** Public Application Load Balancer, target group, security groups, and Auto Scaling Group (Amazon Linux + nginx).
-- **Planned:** RDS Multi-AZ, S3 static assets, and CloudWatch dashboards/alarms.
-- **Cost discipline:** NAT off by default for the lab; tear down with `terraform destroy` when idle. Deploy steps live in [`terraform/README.md`](terraform/README.md).
+- **Phase 3 (done):** Private RDS MySQL (`db.t3.micro`), Single-AZ by default; optional Multi-AZ toggle.
+- **Planned:** S3 static assets and CloudWatch dashboards/alarms.
+- **Cost discipline:** NAT off by default; tear down with `terraform destroy` when idle. Deploy steps live in [`terraform/README.md`](terraform/README.md).

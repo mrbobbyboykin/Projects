@@ -4,21 +4,22 @@ project_name = "portfolio-lab"
 environment  = "lab"
 aws_region   = "us-east-1"
 
-# Match AZs to your region:
 availability_zones = ["us-east-1a", "us-east-1b"]
 
-# Phase 1 VPC + Phase 2 compute (ALB/ASG)
 # NAT off = cheaper; ASG uses public subnets so instances can reach dnf.
-# NAT on  = ASG in private subnets (production-like; ~$32+/mo for NAT).
 enable_nat_gateway = false
 enable_compute     = true
 
-# ASG sizing (t3.micro is free-tier eligible in many accounts)
 instance_type        = "t3.micro"
 asg_min_size         = 1
 asg_max_size         = 2
 asg_desired_capacity = 2
 
-enable_rds        = false
+# Phase 3 — Single-AZ RDS (requires enable_compute). Destroy when done.
+enable_rds           = true
+rds_multi_az         = false
+db_instance_class    = "db.t3.micro"
+db_allocated_storage = 20
+
 enable_s3_static  = false
 enable_monitoring = false
