@@ -52,5 +52,12 @@ output "rds_master_password" {
   sensitive   = true
 }
 
-# Uncomment as modules are implemented:
-# output "s3_bucket_name" { value = module.s3_static[0].bucket_name }
+output "s3_bucket_name" {
+  description = "Static assets bucket (null if disabled)."
+  value       = var.enable_s3_static ? module.s3_static[0].bucket_name : null
+}
+
+output "cloudwatch_dashboard_name" {
+  description = "CloudWatch dashboard name (null if monitoring disabled)."
+  value       = var.enable_monitoring && var.enable_compute ? module.monitoring[0].dashboard_name : null
+}

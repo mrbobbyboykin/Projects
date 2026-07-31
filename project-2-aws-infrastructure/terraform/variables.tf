@@ -105,16 +105,22 @@ variable "db_allocated_storage" {
   default = 20
 }
 
-# --- Phase 4 toggles ---
+# --- Phase 4: S3 + CloudWatch ---
 
 variable "enable_s3_static" {
-  description = "When true, create S3 static assets module (not implemented yet)."
+  description = "When true, create private S3 bucket for static assets."
   type        = bool
   default     = false
 }
 
 variable "enable_monitoring" {
-  description = "When true, create CloudWatch dashboards/alarms (not implemented yet)."
+  description = "When true, create CloudWatch dashboard/alarms (requires enable_compute)."
   type        = bool
   default     = false
+}
+
+variable "alarm_email" {
+  description = "Optional email for CloudWatch alarm SNS notifications. Leave empty to skip SNS."
+  type        = string
+  default     = ""
 }

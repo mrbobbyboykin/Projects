@@ -1,6 +1,8 @@
 # Root module — compose infrastructure from child modules.
-# Phase 1: VPC foundation
-# Phase 2: ALB + ASG when enable_compute = true
+# Phase 1: VPC
+# Phase 2: ALB + ASG
+# Phase 3: RDS
+# Phase 4: S3 + CloudWatch
 
 module "vpc" {
   source = "./modules/vpc"
@@ -65,20 +67,25 @@ module "rds" {
   multi_az              = var.rds_multi_az
 }
 
-# --- Phase 4 stubs ---
+# Phase 4a: private S3 bucket for static assets
+module "s3_static" {
+  count  = var.enable_s3_static ? 1 : 0
+  source = "./modules/s3"
 
-# module "s3_static" {
-#   count  = var.enable_s3_static ? 1 : 0
-#   source = "./modules/s3"
-#
-#   project_name = var.project_name
-#   environment  = var.environment
-# }
+  project_name = var.project_name
+  environment  = var.environment
+}
 
-# module "monitoring" {
-#   count  = var.enable_monitoring ? 1 : 0
-#   source = "./modules/cloudwatch"
-#
-#   project_name = var.project_name
-#   environment  = var.environment
-# }
+# Phase 4b: CloudWatch dashboard + alarms (requires compute)
+module "monitoring" {
+  count  = var.enable_monitoring && var.enable_compute ? 1 : 0
+  source = "./modules/cloudwatch"
+
+  project_name            = var.project_name
+  environment             = var.environment
+  alb_arn_suffix          = module.alb[0].alb_arn_suffix
+  target_group_arn_suffix = module.alb[0].target_group_arn_suffix
+  asg_name                = module.asg[0].asg_name
+  rds_identifier          = var.enable_rds ? module.rds[0].db_identifier : null
+  alarm_email             = var.alarm_email
+}

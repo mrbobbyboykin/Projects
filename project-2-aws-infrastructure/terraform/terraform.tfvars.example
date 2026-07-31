@@ -6,7 +6,6 @@ aws_region   = "us-east-1"
 
 availability_zones = ["us-east-1a", "us-east-1b"]
 
-# NAT off = cheaper; ASG uses public subnets so instances can reach dnf.
 enable_nat_gateway = false
 enable_compute     = true
 
@@ -15,11 +14,13 @@ asg_min_size         = 1
 asg_max_size         = 2
 asg_desired_capacity = 2
 
-# Phase 3 — Single-AZ RDS (requires enable_compute). Destroy when done.
-enable_rds           = true
+# Phase 3 — leave false for cheaper Phase 4 demos; enable when testing RDS
+enable_rds           = false
 rds_multi_az         = false
 db_instance_class    = "db.t3.micro"
 db_allocated_storage = 20
 
-enable_s3_static  = false
-enable_monitoring = false
+# Phase 4
+enable_s3_static  = true
+enable_monitoring = true
+# Optional: alarm_email = "you@example.com"
