@@ -12,13 +12,11 @@ terraform {
     }
   }
 
-  # Uncomment after creating the S3 bucket + DynamoDB table for remote state (recommended before prod-like work):
+  # Phase 5 — remote state (see docs/REMOTE-STATE.md)
+  # 1) Apply terraform/bootstrap
+  # 2) Create backend.hcl from backend.hcl.example
+  # 3) Uncomment this block, then:
+  #      terraform init -backend-config=backend.hcl
   #
-  # backend "s3" {
-  #   bucket         = "YOUR-TF-STATE-BUCKET"
-  #   key            = "project-2/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   dynamodb_table = "terraform-locks"
-  #   encrypt        = true
-  # }
+   backend "s3" {}
 }

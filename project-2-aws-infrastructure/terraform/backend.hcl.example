@@ -1,0 +1,8 @@
+# Copy to backend.hcl after bootstrap (backend.hcl is gitignored).
+# Fill bucket from: terraform -chdir=bootstrap output -raw state_bucket_name
+
+bucket         = "REPLACE-WITH-BOOTSTRAP-BUCKET-NAME"
+key            = "project-2/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "portfolio-lab-terraform-locks"
+encrypt        = true

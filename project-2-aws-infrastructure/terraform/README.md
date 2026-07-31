@@ -28,4 +28,5 @@ Module implementation order:
 1. `modules/vpc` — done  
 2. `modules/alb` + `modules/asg` — done  
 3. `modules/rds` — done (Single-AZ default)  
-4. `modules/s3` + `modules/cloudwatch` — done
+4. `modules/s3` + `modules/cloudwatch` — done  
+5. Remote state — `bootstrap/` + [docs/REMOTE-STATE.md](../docs/REMOTE-STATE.md)

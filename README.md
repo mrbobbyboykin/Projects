@@ -7,7 +7,8 @@ Monorepo for hands-on labs and infrastructure projects. Each project lives in it
 | # | Folder | Status | Summary |
 |---|--------|--------|---------|
 | 1 | [project-1-ansible-lab](project-1-ansible-lab/) | **Complete** | Multi-node RHEL 9 web tier automated with Ansible (Control-Node + App-Node1/2, nginx, firewalld, Git workflow). |
-| 2 | [project-2-aws-infrastructure](project-2-aws-infrastructure/) | **In progress** | AWS VPC foundation in Terraform; ALB, ASG, RDS, S3, CloudWatch modules stubbed. |
+| 2 | [project-2-aws-infrastructure](project-2-aws-infrastructure/) | **Complete** (Phases 1–5) | Terraform AWS lab: VPC, ALB/ASG, RDS, S3, CloudWatch, remote state bootstrap. |
+| 3 | *(planned)* | Next | S3 static site + CloudFront + DynamoDB visitor counter. |
 
 ## Quick links (recruiters)
 
@@ -22,7 +23,7 @@ Monorepo for hands-on labs and infrastructure projects. Each project lives in it
 Projects/
 ├── README.md                          ← you are here
 ├── project-1-ansible-lab/             ← Ansible / RHEL automation lab
-└── project-2-aws-infrastructure/      ← AWS + Terraform (in progress)
+└── project-2-aws-infrastructure/      ← AWS + Terraform
 ```
 
 ## How I work

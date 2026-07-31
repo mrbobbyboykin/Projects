@@ -48,7 +48,7 @@ flowchart TB
 | 2 | `modules/alb`, `modules/asg` | **Implemented** |
 | 3 | `modules/rds` | **Implemented (Single-AZ default)** |
 | 4 | `modules/s3`, `modules/cloudwatch` | **Implemented** |
-| 5 | Remote state (S3 + DynamoDB lock) | Commented in `versions.tf` |
+| 5 | Remote state (S3 + DynamoDB lock) | **Implemented** — see [REMOTE-STATE.md](REMOTE-STATE.md) |
 
 ### Phase 3 RDS
 
@@ -60,6 +60,12 @@ flowchart TB
 
 - **S3:** private bucket, versioning, encryption, lifecycle on noncurrent versions; `force_destroy` for lab teardown  
 - **CloudWatch:** dashboard (ALB/ASG; RDS widgets when enabled) + alarms (unhealthy hosts, high CPU). Optional SNS email via `alarm_email`
+
+### Phase 5 — Remote state
+
+- Bootstrap stack under `terraform/bootstrap/` creates versioned S3 state bucket + DynamoDB lock table  
+- Main project enables `backend "s3" {}` and `terraform init -backend-config=backend.hcl`  
+- Details: [REMOTE-STATE.md](REMOTE-STATE.md)
 
 ### Phase 2 lab networking
 
