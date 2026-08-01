@@ -10,7 +10,7 @@
 
 ## Quick links
 
-- [Project 1 - Ansible Playbooks](https://github.com/mrbobbyboykin/Projects/blob/main/project-1-ansible-lab/docs/Ansible%20Playbooks.docx)
+- [Project 1 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-1-ansible-lab/docs/Project%201%20-%20What%20was%20Implemented.docx)
 - [Project 2 - What is Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-2-aws-infrastructure/docs/Project%202%20-%20What%20is%20Implemented.docx)
 
 ## Repository layout
