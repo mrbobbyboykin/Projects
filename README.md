@@ -1,7 +1,5 @@
 # Projects — Cloud & Platform Engineering Portfolio
 
-Monorepo for hands-on labs and infrastructure projects. Each project lives in its own folder with a dedicated README, architecture diagram, and evidence (screenshots) where applicable.
-
 ## Projects
 
 | # | Folder | Status | Summary |
