@@ -22,11 +22,6 @@ Projects/
 └── project-2-aws-infrastructure/      ← AWS + Terraform
 ```
 
-## How I work
-
-- **Windows:** edit, commit, and push from the `Projects-git` clone.
-- **Linux control host:** `git pull`, then run automation from the relevant project folder (e.g. `project-1-ansible-lab/`).
-
 ## License
 
 See [project-1-ansible-lab/LICENSE](project-1-ansible-lab/LICENSE) (MIT).
