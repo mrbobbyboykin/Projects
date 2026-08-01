@@ -10,7 +10,7 @@ project-2-aws-infrastructure/
 │   ├── ARCHITECTURE.md              # Target diagram & phase plan
 │   ├── REMOTE-STATE.md              # Phase 5 — S3 backend + DynamoDB locks
 │   ├── Milestone-Screenshots/       # VPC, ALB, ASG, console evidence
-│   └── Project 2 - What is Implemented.docx
+│   └── Project 2 - What was Implemented.docx
 └── terraform/
     ├── bootstrap/                   # Phase 5 — S3 + DynamoDB for remote state
     ├── main.tf                      # Composes modules
