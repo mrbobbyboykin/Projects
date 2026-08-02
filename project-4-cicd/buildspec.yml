@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Deploying Project 3 static site"
+      - echo "SITE_BUCKET=$SITE_BUCKET"
+      - echo "CLOUDFRONT_DISTRIBUTION_ID=$CLOUDFRONT_DISTRIBUTION_ID"
+  build:
+    commands:
+      - aws s3 sync project-3-static-site/site/ "s3://${SITE_BUCKET}/" --delete
+      - aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
+  post_build:
+    commands:
+      - echo "Deploy complete"

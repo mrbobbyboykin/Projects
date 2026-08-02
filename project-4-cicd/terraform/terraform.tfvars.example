@@ -1,0 +1,17 @@
+# Local lab settings — gitignored.
+
+project_name = "portfolio-lab"
+environment  = "lab"
+aws_region   = "us-east-1"
+
+github_owner  = "mrbobbyboykin"
+github_repo   = "Projects"
+github_branch = "main"
+
+# From Project 3:
+#   terraform -chdir=../../project-3-static-site/terraform output -raw site_bucket_name
+#   terraform -chdir=../../project-3-static-site/terraform output -raw cloudfront_distribution_id
+site_bucket_name           = "portfolio-lab-lab-site-86d2cc9b"
+cloudfront_distribution_id = "E1Q5Y83M3F2643"
+
+force_destroy_artifacts = true
