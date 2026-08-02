@@ -1,0 +1,12 @@
+# Reuse the Project 2 bootstrap state bucket + lock table.
+# Copy to backend.hcl (gitignored), then uncomment backend "s3" {} in versions.tf
+# and run: terraform init -backend-config=backend.hcl
+#
+# Bucket name from Project 2:
+#   terraform -chdir=../../project-2-aws-infrastructure/terraform/bootstrap output -raw state_bucket_name
+
+bucket         = "REPLACE-WITH-BOOTSTRAP-BUCKET-NAME"
+key            = "project-3/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "portfolio-lab-terraform-locks"
+encrypt        = true

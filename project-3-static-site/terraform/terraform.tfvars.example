@@ -1,0 +1,8 @@
+# Local lab settings — gitignored. See terraform.tfvars.example.
+
+project_name = "portfolio-lab"
+environment  = "lab"
+aws_region   = "us-east-1"
+
+force_destroy_bucket   = true
+cloudfront_price_class = "PriceClass_100"

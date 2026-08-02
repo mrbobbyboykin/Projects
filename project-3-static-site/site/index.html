@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+    <main class="hero">
+      <p class="brand">Portfolio Lab</p>
+      <h1>A small serverless site on AWS.</h1>
+      <p class="lede">
+        S3 origin, CloudFront edge, and a DynamoDB visitor counter — wired with Terraform.
+      </p>
+      <div class="cta">
+        <button type="button" id="count-btn">Count this visit</button>
+        <p class="count-line" id="count-line" aria-live="polite">Visits: —</p>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
