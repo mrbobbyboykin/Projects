@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portfolio Lab</title>
+    <title>Bobby Boykin — Linux / Cloud portfolio lab</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,15 +15,20 @@
   <body>
     <div class="atmosphere" aria-hidden="true"></div>
     <main class="hero">
-      <p class="brand">Portfolio Lab</p>
-      <h1>A small serverless site on AWS.</h1>
+      <p class="brand">Built by Bobby Boykin — Linux / Cloud portfolio lab</p>
+      <h1>Fast, simple, and cloud-native.</h1>
       <p class="lede">
-        S3 origin, CloudFront edge, and a DynamoDB visitor counter — wired with Terraform.
+        This page is hosted on S3, served through CloudFront, and tracks visits with DynamoDB.
       </p>
       <div class="cta">
         <button type="button" id="count-btn">Count this visit</button>
         <p class="count-line" id="count-line" aria-live="polite">Visits: —</p>
       </div>
+      <p class="links">
+        <a href="https://github.com/mrbobbyboykin/Projects" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="link-sep" aria-hidden="true">·</span>
+        <a href="https://www.linkedin.com/in/bobbyboykin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </p>
     </main>
     <script src="app.js"></script>
   </body>
