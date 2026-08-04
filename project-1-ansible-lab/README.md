@@ -14,7 +14,7 @@ project-1-ansible-lab/
 ├── collections/
 │   └── requirements.yml        # ansible.posix (firewalld module)
 ├── docs/
-│   ├── Ansible Lab Architecture.png
+│   ├── Ansible Lab Architecture.png  # Deployed to app nodes by webserver role
 │   ├── ARCHITECTURE.md
 │   ├── LAB-SETUP.md            # VM, SSH, Git workflow
 │   ├── ROADMAP.md              # Week-by-week lab milestones
@@ -58,8 +58,6 @@ flowchart LR
   Win -->|HTTP :80| A1
   Win -->|HTTP :80| A2
 ```
-
-Lab diagram (PNG): ![Ansible lab architecture](docs/Ansible%20Lab%20Architecture.png)
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Setup notes: [docs/LAB-SETUP.md](docs/LAB-SETUP.md).
 

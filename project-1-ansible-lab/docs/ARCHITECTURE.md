@@ -20,7 +20,7 @@ flowchart LR
   Win -->|HTTP :80| A2
 ```
 
-Lab diagram (PNG): [Ansible Lab Architecture.png](Ansible%20Lab%20Architecture.png)
+The PNG under `docs/Ansible Lab Architecture.png` is still used by the `webserver` role (copied into each app node’s docroot); the Mermaid diagram above is the README architecture view.
 
 ## Roles
 
