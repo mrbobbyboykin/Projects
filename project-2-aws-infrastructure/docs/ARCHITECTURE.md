@@ -1,6 +1,6 @@
-# Project 2 — Target architecture
+# Project 2 — Architecture
 
-Planned AWS layout for the portfolio stack (Terraform-managed).
+Terraform-managed multi-tier AWS lab for the portfolio stack.
 
 ## High-level flow
 
@@ -8,19 +8,23 @@ Planned AWS layout for the portfolio stack (Terraform-managed).
 flowchart TB
   Users[Users / browser]
   ALB[Application Load Balancer\npublic subnets]
-  ASG[Auto Scaling Group\nEC2 app tier\nprivate subnets]
-  RDS[(RDS Multi-AZ\nprivate subnets)]
-  S3[S3 static assets]
-  CW[CloudWatch\nmetrics & alarms]
+  ASG[Auto Scaling Group\nEC2 + nginx]
+  RDS[(RDS MySQL\nprivate subnets\nSingle-AZ default)]
+  S3[S3 private assets]
+  CW[CloudWatch\ndashboard and alarms]
 
-  Users -->|HTTPS/HTTP| ALB
+  Users -->|HTTP| ALB
   ALB --> ASG
   ASG --> RDS
-  Users -.->|static| S3
+  ASG -.-> S3
   ALB --> CW
   ASG --> CW
   RDS --> CW
 ```
+
+With `enable_nat_gateway = false` (lab default), the ASG runs in **public** subnets so instances can install packages without NAT cost. Set `enable_nat_gateway = true` to place the ASG in **private** subnets (production-like).
+
+Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraform/bootstrap/` — see [REMOTE-STATE.md](REMOTE-STATE.md).
 
 ## Network (Phase 1 — implemented in Terraform)
 

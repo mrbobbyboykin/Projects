@@ -2,12 +2,16 @@
 
 [← Back to portfolio index](../README.md)
 
+## Overview
+
+Built and documented a multi-tier AWS environment with Terraform, covering networking, compute, database, storage, monitoring, and remote state. The stack was designed as reusable modules, deployed in phases, verified in the AWS Console, and torn down when idle to control lab cost.
+
 ## Repository layout
 
 ```
 project-2-aws-infrastructure/
 ├── docs/
-│   ├── ARCHITECTURE.md              # Target diagram & phase plan
+│   ├── ARCHITECTURE.md              # Diagram & phase plan
 │   ├── REMOTE-STATE.md              # Phase 5 — S3 backend + DynamoDB locks
 │   ├── Milestone-Screenshots/       # VPC, ALB, ASG, console evidence
 │   └── Project 2 - What was Implemented.docx
@@ -31,7 +35,25 @@ project-2-aws-infrastructure/
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full diagram and security-group plan.  
+```mermaid
+flowchart TB
+  Users[Users / browser]
+  ALB[Application Load Balancer\npublic subnets]
+  ASG[Auto Scaling Group\nEC2 + nginx]
+  RDS[(RDS MySQL\nprivate subnets\nSingle-AZ default)]
+  S3[S3 private assets]
+  CW[CloudWatch\ndashboard and alarms]
+
+  Users -->|HTTP| ALB
+  ALB --> ASG
+  ASG --> RDS
+  ASG -.-> S3
+  ALB --> CW
+  ASG --> CW
+  RDS --> CW
+```
+
+Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).  
 Remote state steps: [docs/REMOTE-STATE.md](docs/REMOTE-STATE.md).
 
 - **Phase 1 (done):** Multi-AZ VPC with public/private subnets, Internet Gateway, and route tables (Terraform).
