@@ -1,4 +1,4 @@
-# Project 3 — Target architecture
+# Project 3 — Architecture
 
 Serverless static site with a DynamoDB-backed visitor counter (Terraform-managed).
 
@@ -34,9 +34,9 @@ flowchart LR
 
 | Phase | Scope | Status |
 |-------|--------|--------|
-| 1 | `modules/s3_site`, `modules/cloudfront` (static only) | **Implemented** |
+| 1 | `modules/s3_site`, `modules/cloudfront` (static site) | **Implemented** |
 | 2 | `modules/dynamodb`, `modules/api` + CloudFront `/api/*` | **Implemented** |
-| 3 | UI wiring, screenshots, teardown habit | Ready to apply |
+| 3 | Landing page UI, screenshots, budget monitoring | **Implemented** |
 
 ## Security notes
 
@@ -44,8 +44,9 @@ flowchart LR
 - API is intentionally simple for a lab (no auth). Suitable for a portfolio demo, not production abuse-sensitive workloads.
 - No custom domain / ACM in v1 — use the CloudFront default domain.
 
-## Relationship to Projects 1–2
+## Relationship to Projects 1–2 and 4
 
 - [Project 1](../project-1-ansible-lab/README.md): Ansible + RHEL automation on VirtualBox.
 - [Project 2](../project-2-aws-infrastructure/README.md): multi-tier VPC / ALB / ASG / RDS lab + remote state bootstrap.
-- **Project 3:** serverless edge + data plane (S3, CloudFront, DynamoDB, Lambda) — reuses Project 2’s state bucket with key `project-3/terraform.tfstate`.
+- [Project 4](../project-4-cicd/README.md): CodePipeline + CodeBuild deploys this site on push to `main`.
+- **Project 3:** serverless edge + data plane (S3, CloudFront, DynamoDB, Lambda).

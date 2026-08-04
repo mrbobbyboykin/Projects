@@ -1,4 +1,4 @@
-# Project 4 — Target architecture
+# Project 4 — Architecture
 
 CI/CD for the Project 3 static site using **AWS CodePipeline** + **AWS CodeBuild**.
 
@@ -7,12 +7,14 @@ CI/CD for the Project 3 static site using **AWS CodePipeline** + **AWS CodeBuild
 ```mermaid
 flowchart LR
   Dev[Push to GitHub main]
+  Conn[CodeStar Connection]
   CP[CodePipeline]
   CB[CodeBuild]
   S3[Project 3 S3 bucket]
   CF[CloudFront]
 
-  Dev -->|CodeStar Connection| CP
+  Dev --> Conn
+  Conn --> CP
   CP --> CB
   CB -->|s3 sync| S3
   CB -->|invalidate| CF

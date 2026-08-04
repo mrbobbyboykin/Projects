@@ -2,12 +2,18 @@
 
 [← Back to portfolio index](../README.md)
 
+## Overview
+
+Built an AWS CI/CD pipeline with CodePipeline and CodeBuild that deploys the Project 3 static site to S3 and invalidates CloudFront on every push to main. GitHub is connected via CodeStar Connections; pipeline success was verified with live site updates.
+
 ## Repository layout
 
 ```
 project-4-cicd/
 ├── docs/
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md
+│   ├── Project 4 - What was Implemented.docx
+│   └── Project 4 - Milestone Screenshots.docx
 ├── buildspec.yml                    # Deploy steps run by CodeBuild
 └── terraform/
     ├── main.tf                      # Pipeline + Build + IAM + artifacts
@@ -19,20 +25,28 @@ project-4-cicd/
     └── terraform.tfvars.example
 ```
 
-## What this does
+## Architecture
 
-On every push to `main` in [mrbobbyboykin/Projects](https://github.com/mrbobbyboykin/Projects):
+```mermaid
+flowchart LR
+  Dev[Push to GitHub main]
+  Conn[CodeStar Connection]
+  CP[CodePipeline]
+  CB[CodeBuild]
+  S3[Project 3 S3 bucket]
+  CF[CloudFront]
 
-1. **CodePipeline** pulls the repo (via GitHub CodeStar Connection)
-2. **CodeBuild** syncs `project-3-static-site/site/` to the Project 3 S3 bucket
-3. **CodeBuild** creates a CloudFront invalidation so visitors see the update
+  Dev --> Conn
+  Conn --> CP
+  CP --> CB
+  CB -->|s3 sync| S3
+  CB -->|invalidate| CF
+```
 
-## Prerequisites
+Full component notes: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).  
+Apply / GitHub connection steps: [`terraform/README.md`](terraform/README.md).
 
-- Project 3 stack already applied (S3 site bucket + CloudFront distribution)
-- AWS credentials (same account as Project 3)
-- One-time GitHub authorization for the CodeStar Connection (see [`terraform/README.md`](terraform/README.md))
-
-## Cost note
-
-Expect roughly **~$1–5/month** for a lightly used pipeline (CodePipeline + short CodeBuild runs), on top of Project 3 hosting.
+- **Source:** CodePipeline pulls `mrbobbyboykin/Projects` (`main`) via CodeStar Connection (GitHub App).
+- **Deploy:** CodeBuild runs `buildspec.yml` — syncs `project-3-static-site/site/` to S3, then invalidates CloudFront.
+- **Supporting:** private artifacts bucket + least-privilege IAM for Pipeline and CodeBuild.
+- **Cost note:** roughly **~$1–5/month** for light use (pipeline + short builds), on top of Project 3 hosting. Safe to leave idle with a budget alert.
