@@ -12,7 +12,6 @@ Built and documented a multi-tier AWS environment with Terraform, covering netwo
 project-2-aws-infrastructure/
 ├── docs/
 │   ├── ARCHITECTURE.md              # Diagram & phase plan
-│   ├── REMOTE-STATE.md              # Phase 5 — S3 backend + DynamoDB locks
 │   ├── Milestone-Screenshots/       # VPC, ALB, ASG, console evidence
 │   └── Project 2 - What was Implemented.docx
 └── terraform/
@@ -53,12 +52,11 @@ flowchart TB
   RDS --> CW
 ```
 
-Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).  
-Remote state steps: [docs/REMOTE-STATE.md](docs/REMOTE-STATE.md).
+Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 - **Phase 1 (done):** Multi-AZ VPC with public/private subnets, Internet Gateway, and route tables (Terraform).
 - **Phase 2 (done):** Public Application Load Balancer, target group, security groups, and Auto Scaling Group (Amazon Linux + nginx).
 - **Phase 3 (done):** Private RDS MySQL (`db.t3.micro`), Single-AZ by default; optional Multi-AZ toggle.
 - **Phase 4 (done):** Private S3 static-assets bucket; CloudWatch dashboard and alarms (ALB/ASG; RDS when enabled).
-- **Phase 5 (done):** Remote state bootstrap (S3 + DynamoDB lock); enable via `docs/REMOTE-STATE.md`.
+- **Phase 5 (done):** Remote state bootstrap (S3 + DynamoDB lock) under `terraform/bootstrap/`.
 - **Cost discipline:** NAT off by default; tear down **lab** stacks with `terraform destroy` when idle. Keep the **bootstrap** backend. Deploy steps live in [`terraform/README.md`](terraform/README.md).

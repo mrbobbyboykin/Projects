@@ -12,7 +12,7 @@ terraform {
     }
   }
 
-  # Phase 5 — remote state (see docs/REMOTE-STATE.md)
+  # Phase 5 — remote state (see terraform/bootstrap/ and backend.hcl.example)
   # 1) Apply terraform/bootstrap
   # 2) Create backend.hcl from backend.hcl.example
   # 3) Uncomment this block, then:

@@ -6,7 +6,8 @@
 #   terraform apply
 #   terraform output
 #
-# Then follow ../docs/REMOTE-STATE.md to point the main stack at this backend.
+# Then point the main stack at this backend (backend.hcl.example → backend.hcl,
+# uncomment backend "s3" {} in versions.tf, terraform init -backend-config=backend.hcl).
 # Do NOT destroy this stack while the main project uses remote state.
 
 terraform {

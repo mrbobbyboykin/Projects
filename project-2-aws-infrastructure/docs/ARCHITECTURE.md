@@ -24,7 +24,7 @@ flowchart TB
 
 With `enable_nat_gateway = false` (lab default), the ASG runs in **public** subnets so instances can install packages without NAT cost. Set `enable_nat_gateway = true` to place the ASG in **private** subnets (production-like).
 
-Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraform/bootstrap/` — see [REMOTE-STATE.md](REMOTE-STATE.md).
+Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraform/bootstrap/`.
 
 ## Network (Phase 1 — implemented in Terraform)
 
@@ -52,7 +52,7 @@ Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraf
 | 2 | `modules/alb`, `modules/asg` | **Implemented** |
 | 3 | `modules/rds` | **Implemented (Single-AZ default)** |
 | 4 | `modules/s3`, `modules/cloudwatch` | **Implemented** |
-| 5 | Remote state (S3 + DynamoDB lock) | **Implemented** — see [REMOTE-STATE.md](REMOTE-STATE.md) |
+| 5 | Remote state (S3 + DynamoDB lock) | **Implemented** — `terraform/bootstrap/` |
 
 ### Phase 3 RDS
 
@@ -69,7 +69,7 @@ Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraf
 
 - Bootstrap stack under `terraform/bootstrap/` creates versioned S3 state bucket + DynamoDB lock table  
 - Main project enables `backend "s3" {}` and `terraform init -backend-config=backend.hcl`  
-- Details: [REMOTE-STATE.md](REMOTE-STATE.md)
+- Example config: `terraform/backend.hcl.example`
 
 ### Phase 2 lab networking
 
