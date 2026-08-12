@@ -60,3 +60,46 @@ Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.m
 - **Phase 4 (done):** Private S3 static-assets bucket; CloudWatch dashboard and alarms (ALB/ASG; RDS when enabled).
 - **Phase 5 (done):** Remote state bootstrap (S3 + DynamoDB lock) under `terraform/bootstrap/`.
 - **Cost discipline:** NAT off by default; tear down **lab** stacks with `terraform destroy` when idle. Keep the **bootstrap** backend. Deploy steps live in [`terraform/README.md`](terraform/README.md).
+
+## What was implemented
+
+### Overview
+
+Built and documented a multi-tier AWS environment with Terraform, covering networking, compute, database, storage, monitoring, and remote state. The stack was designed as reusable modules, deployed in phases, verified in the AWS Console, and torn down when idle to control lab cost.
+
+### Phase 1: Networking
+
+- Multi Availability Zone Virtual Private Cloud (VPC)
+- Public and Private subnets configured
+- Internet gateway
+- Route tables
+- NAT left disabled for lab cost
+
+### Phase 2: Compute & Load Balancing
+
+- Public Application Load Balancer + target group
+- Auto Scaling Group of EC2 instance running nginx
+- Security Groups
+  - Internet
+  - ALB
+  - App Tier
+
+### Phase 3: Database
+
+- Private RDS MySQL (db.t3.micro), not publicly accessible
+- Type chosen for low lab cost.
+- Single AZ by default
+- DB access limited to App Tier Security Group
+
+### Phase 4: Storage & Monitoring
+
+- Private S3 bucket with versioning, encryption, and lifecycle rules
+- CloudWatch dashboard with alarms enabled for:
+  - Application Load Balancer (ALB)
+  - Application Security Group (ASG)
+  - RDS/MySQL DB when enabled
+
+### Phase 5: Remote State
+
+- Dedicated S3 bucket for Terraform state, with DynamoDB locking
+- Team-ready state management separate from the deployable lab stack

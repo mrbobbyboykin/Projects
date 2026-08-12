@@ -63,3 +63,51 @@ More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - **Control-Node** (VirtualBox): pulls the monorepo, runs playbooks from **`project-1-ansible-lab/`**, connects to app nodes over **SSH :22** (`ansible` user + key).
 - **App-Node1** and **App-Node2:** `[webservers]` targets running **nginx :80**, with **firewalld** (`http`/`https`) and a templated landing page per host.
 - **Playbooks:** `site.yml` (common + webserver), `patch.yml` (rolling updates), `troubleshoot.yml` (read-only health/security).
+
+## What was implemented
+
+### Overview
+
+Built a multi-node RHEL 9 web lab with Ansible, covering baseline hardening, web server deployment, firewall configuration, rolling patching, and read-only troubleshooting. The stack was designed as reusable roles and playbooks, deployed from a control node over SSH, verified with health checks and screenshots, and managed through a Git-based workflow.
+
+### Lab Topology
+
+- Windows 11 host for edit/commit/push
+- 3 RHEL VMs on VirtualBox
+
+### Common Role - baseline on each VM
+
+- Common Packages (chrony, curl, vim, rsync, python3, SELinux libs)
+- Timezone + chronyd enabled
+- ansible lab admin user with sudo and SSH key support
+- SSH hardening via drop-in (sshd_config.d), with validate + rollback if config is invalid
+- SELinux set to enforcing (targeted policy)
+- logrotate drop-in for nginx access/error logs
+
+### Webserver Role
+
+- nginx (default) or httpd
+- firewalld enabled with HTTP/HTTPS open
+- templated landing page per host
+- Architecture diagram deployed to docroot
+- SELinux file contexts restored on web content
+- Web service enabled and started
+
+### Playbooks
+
+- Site.yml - main deploy: common + webserver
+- Patch.yml - rolling dnf updates (serial: 1), optional reboot
+- Troubleshoot.yml - read-only health/security snapshot (uptime, disk, memory, CPU, services, listening ports, SELinux mode, auth failures, AVC denials)
+
+### Scripts/wrappers
+
+- deploy.sh - runs site.yml
+- troubleshoot.sh - runs troubleshoot.yml
+- health-check.sh - local CPU/mem/disk snapshot
+- security-skim.sh - local auth failures + SELinux skim
+
+### Repo/workflow
+
+- ansible.posix collection for firewalld
+- docs, architecture diagram, and milestone screenshots
+- Git-based push/pull workflow between Windows and Control Node (VM)
