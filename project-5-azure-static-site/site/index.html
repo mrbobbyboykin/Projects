@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bobby Boykin — Azure static web lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+    <div class="page">
+      <header class="topbar">
+        <span class="badge">Project 5 · Azure</span>
+        <span class="region">Terraform-managed</span>
+      </header>
+
+      <main class="card">
+        <p class="eyebrow">Bobby Boykin — Linux &amp; Cloud lab</p>
+        <h1>Infrastructure as code,<br />hosted on Azure.</h1>
+        <p class="lede">
+          A static portfolio page served from Azure Storage’s <code>$web</code> container.
+          Visitor counts are stored in Table Storage and exposed through an Azure Function —
+          all provisioned with the AzureRM provider.
+        </p>
+
+        <ul class="stack" aria-label="Stack">
+          <li>Storage static website</li>
+          <li>Azure Function</li>
+          <li>Table Storage</li>
+          <li>Terraform</li>
+        </ul>
+
+        <section class="counter" aria-labelledby="counter-heading">
+          <h2 id="counter-heading">Live telemetry</h2>
+          <p class="counter-hint">Hit the button to increment the visit counter in Table Storage.</p>
+          <div class="counter-row">
+            <button type="button" id="count-btn">Log a visit</button>
+            <p class="count-line" id="count-line" aria-live="polite">Total visits: —</p>
+          </div>
+        </section>
+
+        <nav class="links" aria-label="External links">
+          <a href="https://github.com/mrbobbyboykin/Projects/tree/main/project-5-azure-static-site" target="_blank" rel="noopener noreferrer">View source</a>
+          <a href="https://github.com/mrbobbyboykin/Projects" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/bobbyboykin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </main>
+
+      <footer class="footnote">
+        Multi-cloud portfolio lab — AWS site lives on CloudFront; this one runs on Azure Storage.
+      </footer>
+    </div>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

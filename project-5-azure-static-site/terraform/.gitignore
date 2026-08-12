@@ -1,0 +1,13 @@
+# Terraform state and secrets — do not commit
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+*.tfplan
+tfplan
+backend.hcl
+crash.log
+crash.*.log
+modules/api/build/

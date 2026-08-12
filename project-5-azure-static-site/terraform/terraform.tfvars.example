@@ -1,0 +1,11 @@
+# Local lab settings — gitignored.
+
+project_name = "portfoliolab"
+environment  = "lab"
+location     = "eastus"
+
+# New Azure free accounts often have 0 VM quota — deploy the static site first:
+# enable_visitor_api = false
+#
+# After quota increase (see terraform/README.md), set true and terraform apply again.
+enable_visitor_api = true
