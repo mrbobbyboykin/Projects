@@ -16,6 +16,7 @@
 - [Project 2 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-2-aws-infrastructure/docs/Project%202%20-%20What%20was%20Implemented.docx)
 - [Project 3 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-3-static-site/docs/Project%203%20%E2%80%93%20What%20was%20Implemented.docx)
 - [Project 4 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-4-cicd/docs/Project%204%20%E2%80%93%20What%20was%20Implemented.docx)
+- [Project 5 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-5-azure-static-site/docs/Project%205%20-%20What%20was%20Implemented.docx)
 
 ## Repository layout
 
