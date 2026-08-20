@@ -6,6 +6,8 @@
 
 Built and documented a serverless static site with Terraform, covering private S3 hosting, CloudFront delivery, and a DynamoDB visitor counter via Lambda and API Gateway. The stack was modular, verified live over HTTPS, and kept available as a low-cost portfolio demo with budget alerts.
 
+**Live demo:** https://d2ma7ywng4dw2d.cloudfront.net
+
 ## Repository layout
 
 ```
