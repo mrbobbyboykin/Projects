@@ -24,3 +24,10 @@ db_allocated_storage = 20
 enable_s3_static  = true
 enable_monitoring = true
 # Optional: alarm_email = "you@example.com"
+
+# Phase 6 — security baseline (CloudTrail, Config, GuardDuty, KMS)
+# Leave false until you want screenshots; destroy after to avoid Config/KMS charges.
+enable_security      = false
+enable_config_rules  = true
+# Free accounts often cannot enable GuardDuty — leave false if CreateDetector returns SubscriptionRequiredException.
+enable_guardduty     = false

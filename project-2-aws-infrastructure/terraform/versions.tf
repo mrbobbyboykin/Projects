@@ -18,5 +18,5 @@ terraform {
   # 3) Uncomment this block, then:
   #      terraform init -backend-config=backend.hcl
   #
-   backend "s3" {}
+  backend "s3" {}
 }

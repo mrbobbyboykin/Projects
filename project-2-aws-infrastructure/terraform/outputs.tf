@@ -61,3 +61,28 @@ output "cloudwatch_dashboard_name" {
   description = "CloudWatch dashboard name (null if monitoring disabled)."
   value       = var.enable_monitoring && var.enable_compute ? module.monitoring[0].dashboard_name : null
 }
+
+output "security_logs_bucket_name" {
+  description = "CloudTrail / Config log bucket (null if security disabled)."
+  value       = var.enable_security ? module.security[0].security_logs_bucket_name : null
+}
+
+output "cloudtrail_name" {
+  description = "CloudTrail trail name (null if security disabled)."
+  value       = var.enable_security ? module.security[0].cloudtrail_name : null
+}
+
+output "guardduty_detector_id" {
+  description = "GuardDuty detector ID (null if security or GuardDuty disabled)."
+  value       = var.enable_security && var.enable_guardduty ? module.security[0].guardduty_detector_id : null
+}
+
+output "kms_key_arn" {
+  description = "Security CMK ARN (null if security disabled)."
+  value       = var.enable_security ? module.security[0].kms_key_arn : null
+}
+
+output "security_auditor_role_arn" {
+  description = "Least-privilege SecurityAudit role ARN (null if security disabled)."
+  value       = var.enable_security ? module.security[0].security_auditor_role_arn : null
+}

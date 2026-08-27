@@ -3,6 +3,7 @@
 # Phase 2: ALB + ASG
 # Phase 3: RDS
 # Phase 4: S3 + CloudWatch
+# Phase 6: Security baseline (CloudTrail, Config, GuardDuty, KMS)
 
 module "vpc" {
   source = "./modules/vpc"
@@ -88,4 +89,15 @@ module "monitoring" {
   asg_name                = module.asg[0].asg_name
   rds_identifier          = var.enable_rds ? module.rds[0].db_identifier : null
   alarm_email             = var.alarm_email
+}
+
+# Phase 6: security baseline (independent of compute — enable for screenshots, then destroy)
+module "security" {
+  count  = var.enable_security ? 1 : 0
+  source = "./modules/security"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  enable_config_rules = var.enable_config_rules
+  enable_guardduty    = var.enable_guardduty
 }

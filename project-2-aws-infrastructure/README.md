@@ -29,7 +29,8 @@ project-2-aws-infrastructure/
         ├── asg/                     # Phase 2 — Auto Scaling Group (nginx)
         ├── rds/                     # Phase 3 — RDS MySQL (Single-AZ default)
         ├── s3/                      # Phase 4 — private static assets bucket
-        └── cloudwatch/              # Phase 4 — dashboard + alarms
+        ├── cloudwatch/              # Phase 4 — dashboard + alarms
+        └── security/                # Phase 6 — CloudTrail, Config, GuardDuty, KMS
 ```
 
 ## Architecture
@@ -42,6 +43,11 @@ flowchart TB
   RDS[(RDS MySQL\nprivate subnets\nSingle-AZ default)]
   S3[S3 private assets]
   CW[CloudWatch\ndashboard and alarms]
+  Trail[CloudTrail]
+  Cfg[AWS Config]
+  GD[GuardDuty]
+  KMS[KMS CMK]
+  Logs[S3 security logs]
 
   Users -->|HTTP| ALB
   ALB --> ASG
@@ -50,6 +56,11 @@ flowchart TB
   ALB --> CW
   ASG --> CW
   RDS --> CW
+  Trail --> Logs
+  Cfg --> Logs
+  Trail -.-> KMS
+  Cfg -.-> KMS
+  GD -.-> CW
 ```
 
 Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -59,13 +70,14 @@ Full diagram notes, security-group plan, and phase details: [docs/ARCHITECTURE.m
 - **Phase 3 (done):** Private RDS MySQL (`db.t3.micro`), Single-AZ by default; optional Multi-AZ toggle.
 - **Phase 4 (done):** Private S3 static-assets bucket; CloudWatch dashboard and alarms (ALB/ASG; RDS when enabled).
 - **Phase 5 (done):** Remote state bootstrap (S3 + DynamoDB lock) under `terraform/bootstrap/`.
-- **Cost discipline:** NAT off by default; tear down **lab** stacks with `terraform destroy` when idle. Keep the **bootstrap** backend. Deploy steps live in [`terraform/README.md`](terraform/README.md).
+- **Phase 6 (done):** Security baseline — CloudTrail, AWS Config (+ managed rules), GuardDuty, customer-managed KMS, SecurityAudit IAM role (`enable_security`).
+- **Cost discipline:** NAT off by default; security toggle off until demo; tear down **lab** stacks with `terraform destroy` when idle. Keep the **bootstrap** backend. Deploy steps live in [`terraform/README.md`](terraform/README.md).
 
 ## What was implemented
 
 ### Overview
 
-Built and documented a multi-tier AWS environment with Terraform, covering networking, compute, database, storage, monitoring, and remote state. The stack was designed as reusable modules, deployed in phases, verified in the AWS Console, and torn down when idle to control lab cost.
+Built and documented a multi-tier AWS environment with Terraform, covering networking, compute, database, storage, monitoring, remote state, and a security baseline. The stack was designed as reusable modules, deployed in phases, verified in the AWS Console, and torn down when idle to control lab cost.
 
 ### Phase 1: Networking
 
@@ -103,3 +115,12 @@ Built and documented a multi-tier AWS environment with Terraform, covering netwo
 
 - Dedicated S3 bucket for Terraform state, with DynamoDB locking
 - Team-ready state management separate from the deployable lab stack
+
+### Phase 6: Security baseline
+
+- Customer-managed KMS key (rotation enabled) for encrypting security logs
+- Private S3 log bucket for CloudTrail and Config delivery
+- Multi-region CloudTrail (management events) with log-file validation
+- AWS Config recorder + delivery channel and managed rules (S3 public read, SSL-only, encrypted volumes)
+- **GuardDuty** detector enabled (optional; often unavailable on free accounts — use `enable_guardduty = false`)
+- Least-privilege IAM role with AWS managed SecurityAudit policy (assume with MFA)

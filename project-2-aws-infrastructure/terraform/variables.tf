@@ -124,3 +124,23 @@ variable "alarm_email" {
   type        = string
   default     = ""
 }
+
+# --- Phase 6: Security baseline ---
+
+variable "enable_security" {
+  description = "When true, create CloudTrail, Config, GuardDuty, KMS, and a SecurityAudit IAM role."
+  type        = bool
+  default     = false
+}
+
+variable "enable_config_rules" {
+  description = "When true (and enable_security), create a small set of AWS Config managed rules."
+  type        = bool
+  default     = true
+}
+
+variable "enable_guardduty" {
+  description = "When true (and enable_security), create a GuardDuty detector. Set false if AWS returns SubscriptionRequiredException."
+  type        = bool
+  default     = true
+}

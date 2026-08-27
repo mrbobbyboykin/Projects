@@ -53,6 +53,7 @@ Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraf
 | 3 | `modules/rds` | **Implemented (Single-AZ default)** |
 | 4 | `modules/s3`, `modules/cloudwatch` | **Implemented** |
 | 5 | Remote state (S3 + DynamoDB lock) | **Implemented** — `terraform/bootstrap/` |
+| 6 | `modules/security` (CloudTrail, Config, GuardDuty, KMS) | **Implemented** — toggle with `enable_security` |
 
 ### Phase 3 RDS
 
@@ -70,6 +71,19 @@ Remote state (S3 bucket + DynamoDB lock table) is managed separately via `terraf
 - Bootstrap stack under `terraform/bootstrap/` creates versioned S3 state bucket + DynamoDB lock table  
 - Main project enables `backend "s3" {}` and `terraform init -backend-config=backend.hcl`  
 - Example config: `terraform/backend.hcl.example`
+
+### Phase 6 — Security baseline
+
+Toggle with `enable_security = true` (default **false** for cost). Creates:
+
+- **KMS** customer-managed key (rotation on) for log encryption  
+- **S3** private security-logs bucket (lifecycle: expire after 30 days)  
+- **CloudTrail** multi-region management-event trail + log-file validation  
+- **AWS Config** recorder/delivery + managed rules (S3 public read prohibited, SSL-only, encrypted volumes)  
+- **GuardDuty** detector  
+- **IAM** `SecurityAudit` role (assume from this account with MFA)
+
+Screenshot in Console, then `terraform apply` with `enable_security = false` (or destroy) to stop Config/KMS charges.
 
 ### Phase 2 lab networking
 
