@@ -18,11 +18,22 @@
 - [Project 4 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-4-cicd/docs/Project%204%20%E2%80%93%20What%20was%20Implemented.docx)
 - [Project 5 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-5-azure-static-site/docs/Project%205%20-%20What%20was%20Implemented.docx)
 
+## Template Sites
+
+Client and business website templates (static HTML + optional AWS Terraform). Preview via GitHub Pages before production deploy.
+
+| Folder | Preview | Notes |
+|--------|---------|-------|
+| [Template Sites/SaxtonsGlazingLLC](Template%20Sites/SaxtonsGlazingLLC/) | [GitHub Pages](https://mrbobbyboykin.github.io/Projects/) (after setup) | Commercial glazing contractor — DMV |
+
+See [GITHUB-PAGES.md](Template%20Sites/SaxtonsGlazingLLC/GITHUB-PAGES.md) for one-time Pages setup.
+
 ## Repository layout
 
 ```
 Projects/
 ├── README.md                          ← you are here
+├── Template Sites/                    ← business site templates (GitHub Pages previews)
 ├── project-1-ansible-lab/             ← Ansible / RHEL automation lab
 ├── project-2-aws-infrastructure/      ← AWS + Terraform multi-tier lab
 ├── project-3-static-site/             ← S3 + CloudFront + DynamoDB counter

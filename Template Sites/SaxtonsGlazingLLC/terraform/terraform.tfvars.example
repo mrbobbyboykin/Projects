@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars (gitignored).
+
+aws_region   = "us-east-1"
+environment  = "prod"
+name_prefix  = "saxtonsglazing"
+domain_name  = "saxtonsglazing.com"  # update when domain is purchased
+
+# Set true after registering the domain in Route 53 (or pointing NS to a hosted zone)
+enable_route53 = false
+
+cloudfront_price_class = "PriceClass_100"
+force_destroy_bucket   = true
