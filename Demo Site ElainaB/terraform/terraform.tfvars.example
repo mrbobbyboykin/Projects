@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars (gitignored).
+
+aws_region   = "us-east-1"
+environment  = "prod"
+name_prefix  = "eventsbyelainab"
+domain_name  = "eventsbyelainab.com"
+
+# Set true when ready to cut DNS from Wix to Route 53
+enable_route53 = false
+
+cloudfront_price_class = "PriceClass_100"
+force_destroy_bucket   = true

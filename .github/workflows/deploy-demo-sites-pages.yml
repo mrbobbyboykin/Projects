@@ -1,11 +1,12 @@
-name: Deploy Saxtons Glazing preview
+name: Deploy demo sites to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - "Template Sites/SaxtonsGlazingLLC/**"
-      - ".github/workflows/deploy-saxtons-glazing-pages.yml"
+      - "Demo Site SaxtonsGlazingLLC/**"
+      - "Demo Site ElainaB/**"
+      - ".github/workflows/deploy-demo-sites-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: saxtons-glazing-pages
+  group: demo-sites-pages
   cancel-in-progress: true
 
 jobs:
@@ -27,10 +28,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build Pages artifact
+        run: |
+          mkdir -p _site
+          cp -r "Demo Site SaxtonsGlazingLLC" _site/
+          cp -r "Demo Site ElainaB" _site/
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: Template Sites/SaxtonsGlazingLLC
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

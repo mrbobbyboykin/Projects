@@ -18,22 +18,24 @@
 - [Project 4 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-4-cicd/docs/Project%204%20%E2%80%93%20What%20was%20Implemented.docx)
 - [Project 5 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-5-azure-static-site/docs/Project%205%20-%20What%20was%20Implemented.docx)
 
-## Template Sites
+## Demo Sites
 
-Client and business website templates (static HTML + optional AWS Terraform). Preview via GitHub Pages before production deploy.
+Client business website demos (static HTML + optional AWS Terraform). Preview via GitHub Pages before production deploy.
 
 | Folder | Preview | Notes |
 |--------|---------|-------|
-| [Template Sites/SaxtonsGlazingLLC](Template%20Sites/SaxtonsGlazingLLC/) | [GitHub Pages](https://mrbobbyboykin.github.io/Projects/) (after setup) | Commercial glazing contractor — DMV |
+| [Demo Site SaxtonsGlazingLLC](Demo%20Site%20SaxtonsGlazingLLC/) | [GitHub Pages](https://mrbobbyboykin.github.io/Projects/Demo%20Site%20SaxtonsGlazingLLC/) | Commercial glazing contractor — DMV |
+| [Demo Site ElainaB](Demo%20Site%20ElainaB/) | [GitHub Pages](https://mrbobbyboykin.github.io/Projects/Demo%20Site%20ElainaB/) | Event planning — DMV |
 
-See [GITHUB-PAGES.md](Template%20Sites/SaxtonsGlazingLLC/GITHUB-PAGES.md) for one-time Pages setup.
+See each folder's `GITHUB-PAGES.md` for setup notes. Both deploy via `.github/workflows/deploy-demo-sites-pages.yml`.
 
 ## Repository layout
 
 ```
 Projects/
 ├── README.md                          ← you are here
-├── Template Sites/                    ← business site templates (GitHub Pages previews)
+├── Demo Site SaxtonsGlazingLLC/       ← Saxton's Glazing demo (GitHub Pages)
+├── Demo Site ElainaB/                 ← Events by ElainaB demo (GitHub Pages)
 ├── project-1-ansible-lab/             ← Ansible / RHEL automation lab
 ├── project-2-aws-infrastructure/      ← AWS + Terraform multi-tier lab
 ├── project-3-static-site/             ← S3 + CloudFront + DynamoDB counter
