@@ -9,6 +9,7 @@
 | 3 | [project-3-static-site](project-3-static-site/) | **Complete** | Built and documented a serverless static site with Terraform, covering private S3 hosting, CloudFront delivery, and a DynamoDB visitor counter via Lambda and API Gateway. The stack was modular, verified live over HTTPS, and kept available as a low-cost portfolio demo with budget alerts. |
 | 4 | [project-4-cicd](project-4-cicd/) | **Complete** | Built an AWS CI/CD pipeline with CodePipeline and CodeBuild that deploys the Project 3 static site to S3 and invalidates CloudFront on every push to main. GitHub is connected via CodeStar Connections; pipeline success was verified with live site updates. |
 | 5 | [project-5-azure-static-site](project-5-azure-static-site/) | **In progress** | Built and documented a serverless static site on Microsoft Azure with Terraform, covering Storage static website hosting, an Azure Function visitor counter, and Azure Table Storage. The stack was modular, verified live over HTTPS with a distinct Azure UI, and kept available as a low-cost multi-cloud portfolio demo with budget alerts. |
+| 6 | [project-6-secure-containers](project-6-secure-containers/) | **In progress** (Phase 0 complete) | Build a production-shaped containerized API with Docker on AWS: push images to ECR, run on ECS Fargate behind an ALB, inject secrets from Secrets Manager, and log to CloudWatch—with Terraform IaC, a weekend phased checklist, and an optional GitHub Actions build/scan/deploy stretch. |
 
 ## Quick links
 
@@ -17,6 +18,7 @@
 - [Project 3 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-3-static-site/docs/Project%203%20%E2%80%93%20What%20was%20Implemented.docx)
 - [Project 4 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-4-cicd/docs/Project%204%20%E2%80%93%20What%20was%20Implemented.docx)
 - [Project 5 - What was Implemented](https://github.com/mrbobbyboykin/Projects/blob/main/project-5-azure-static-site/docs/Project%205%20-%20What%20was%20Implemented.docx)
+- [Project 6 - Architecture & Lab Checklist](project-6-secure-containers/docs/ARCHITECTURE.md)
 
 ## Demo Sites
 
@@ -40,7 +42,8 @@ Projects/
 ├── project-2-aws-infrastructure/      ← AWS + Terraform multi-tier lab
 ├── project-3-static-site/             ← S3 + CloudFront + DynamoDB counter
 ├── project-4-cicd/                    ← CodePipeline + CodeBuild → Project 3
-└── project-5-azure-static-site/       ← Azure Storage + Function counter
+├── project-5-azure-static-site/       ← Azure Storage + Function counter
+└── project-6-secure-containers/       ← Docker + ECR + ECS Fargate API lab
 ```
 
 ## License
