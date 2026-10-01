@@ -112,11 +112,13 @@ Work in order. Check boxes as you go. Screenshot milestones for a future “What
 
 ### Phase 1 — Image registry (1–2 hours, cents)
 
-- [ ] Create ECR repo with Terraform (or CLI once, then codify)
-- [ ] Authenticate Docker to ECR
-- [ ] Tag + push image
-- [ ] Confirm image visible in ECR console
-- [ ] (Optional) Enable **scan on push** and open findings
+- [x] Create ECR repo with Terraform (or CLI once, then codify)
+- [x] Authenticate Docker to ECR
+- [x] Tag + push image
+- [x] Confirm image visible in ECR console
+- [x] (Optional) Enable **scan on push** and open findings
+
+ECR repo: `project6-api` → `345485442145.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest`
 
 ### Phase 2 — Run on ECS + ALB (half day, real $)
 

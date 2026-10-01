@@ -1,0 +1,7 @@
+project_name        = "project6"
+environment         = "lab"
+aws_region          = "us-east-1"
+ecr_repository_name = "project6-api"
+ecr_force_delete    = true
+ecr_scan_on_push    = true
+ecr_keep_image_count = 5

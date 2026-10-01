@@ -4,26 +4,49 @@ Infrastructure for the secure containerized API lab.
 
 ## Status
 
-Not implemented yet. Follow phases in [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md).
+- **Phase 1 (ECR):** implemented — create repo, push local Docker image
+- **Phases 2+:** not yet (ECS / ALB / Secrets)
 
-## Planned apply / destroy
+## Phase 1 — create ECR and push image
 
-```bat
+```powershell
 cd "C:\Users\bboyk\OneDrive\Projects\Projects-git\project-6-secure-containers\terraform"
+copy terraform.tfvars.example terraform.tfvars
 terraform init
 terraform plan
 terraform apply
 ```
 
-When idle:
+Authenticate Docker to ECR, then tag and push (use the exact URL from `terraform output`):
 
-```bat
-terraform destroy
+```powershell
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+
+docker tag project6-api:local ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
+docker push ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
 ```
+
+Or print helper commands:
+
+```powershell
+terraform output -raw docker_login_command
+terraform output -raw docker_push_commands
+```
+
+Confirm in AWS Console: **ECR → Repositories → project6-api → Images**.  
+With scan-on-push enabled, open the **Vulnerabilities** / scan results tab after the push.
 
 ## Defaults for cost control
 
 - Region: `us-east-1`
-- One Fargate task (`0.25 vCPU / 0.5 GB`)
-- No NAT Gateway unless you explicitly enable a `enable_nat_gateway` flag
-- HTTP on ALB first; add ACM HTTPS only if you want that stretch goal
+- Lifecycle policy keeps only the last 5 images
+- `force_delete = true` so `terraform destroy` works in the lab
+- No NAT / ALB / Fargate until Phase 2
+
+## Destroy (when idle)
+
+```powershell
+terraform destroy
+```
+
+Note: destroy removes the ECR repo and images. Re-push after recreating.
