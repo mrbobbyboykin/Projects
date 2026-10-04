@@ -4,10 +4,11 @@ Infrastructure for the secure containerized API lab.
 
 ## Status
 
-- **Phase 1 (ECR):** implemented — create repo, push local Docker image
-- **Phases 2+:** not yet (ECS / ALB / Secrets)
+- **Phase 1 (ECR):** implemented
+- **Phase 2 (VPC + ALB + ECS Fargate):** implemented (cheap path — public subnets, no NAT)
+- **Phase 3+:** Secrets Manager hardening, CI stretch
 
-## Phase 1 — create ECR and push image
+## Apply
 
 ```powershell
 cd "C:\Users\bboyk\OneDrive\Projects\Projects-git\project-6-secure-containers\terraform"
@@ -17,36 +18,40 @@ terraform plan
 terraform apply
 ```
 
-Authenticate Docker to ECR, then tag and push (use the exact URL from `terraform output`):
+## Test Phase 2
 
 ```powershell
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+terraform output api_health_url
+terraform output api_info_url
 
-docker tag project6-api:local ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
-docker push ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
+curl.exe (terraform output -raw api_health_url)
+curl.exe (terraform output -raw api_info_url)
 ```
 
-Or print helper commands:
+Console checks:
+- **ECS → Clusters → project6-lab → Services** (1/1 running)
+- **EC2 → Target Groups → project6-lab-tg** (healthy)
+- **CloudWatch → Log groups → /ecs/project6-lab-api**
+
+## Push a new image (after local rebuild)
 
 ```powershell
-terraform output -raw docker_login_command
-terraform output -raw docker_push_commands
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 345485442145.dkr.ecr.us-east-1.amazonaws.com
+docker tag project6-api:local 345485442145.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
+docker push 345485442145.dkr.ecr.us-east-1.amazonaws.com/project6-api:latest
+aws ecs update-service --cluster project6-lab --service project6-lab-api --force-new-deployment --region us-east-1
 ```
 
-Confirm in AWS Console: **ECR → Repositories → project6-api → Images**.  
-With scan-on-push enabled, open the **Vulnerabilities** / scan results tab after the push.
-
-## Defaults for cost control
+## Cost control
 
 - Region: `us-east-1`
-- Lifecycle policy keeps only the last 5 images
-- `force_delete = true` so `terraform destroy` works in the lab
-- No NAT / ALB / Fargate until Phase 2
+- 1 Fargate task (`256` CPU / `512` MiB)
+- No NAT Gateway
+- Log retention: 7 days
+- When idle: `terraform destroy` **or** set `desired_count = 0` and apply (ALB still costs until destroyed)
 
-## Destroy (when idle)
+## Destroy
 
 ```powershell
 terraform destroy
 ```
-
-Note: destroy removes the ECR repo and images. Re-push after recreating.

@@ -122,13 +122,20 @@ ECR repo: `project6-api` → `345485442145.dkr.ecr.us-east-1.amazonaws.com/proje
 
 ### Phase 2 — Run on ECS + ALB (half day, real $)
 
-- [ ] Terraform: VPC (2 public subnets minimum for ALB), security groups
-- [ ] Terraform: ECR (if not already), ECS cluster, task definition, service
-- [ ] Terraform: ALB + target group + listener (HTTP first; HTTPS later if you want)
-- [ ] Wire `/health` as the target group health check
-- [ ] Deploy 1 Fargate task; confirm ALB DNS returns `/health` and `/info`
-- [ ] Confirm logs appear in CloudWatch Logs
+- [x] Terraform: VPC (2 public subnets minimum for ALB), security groups
+- [x] Terraform: ECR (if not already), ECS cluster, task definition, service
+- [x] Terraform: ALB + target group + listener (HTTP first; HTTPS later if you want)
+- [x] Wire `/health` as the target group health check
+- [x] Deploy 1 Fargate task; confirm ALB DNS returns `/health` and `/info`
+- [x] Confirm logs appear in CloudWatch Logs
 - [ ] Screenshot: healthy target + sample response
+
+Live URLs (cheap path, HTTP):
+- Health: `http://project6-lab-alb-1609487481.us-east-1.elb.amazonaws.com/health`
+- Info: `http://project6-lab-alb-1609487481.us-east-1.elb.amazonaws.com/info`
+- Logs: CloudWatch `/ecs/project6-lab-api`
+
+**Cost note:** ALB + 1 Fargate task are billing while this is up. Destroy or scale to 0 when idle.
 
 ### Phase 3 — Secrets + IAM hardening (2–3 hours)
 

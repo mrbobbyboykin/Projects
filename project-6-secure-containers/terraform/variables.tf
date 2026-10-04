@@ -39,3 +39,56 @@ variable "ecr_keep_image_count" {
   type        = number
   default     = 5
 }
+
+# -----------------------------------------------------------------------------
+# Phase 2 — VPC / ECS / ALB
+# -----------------------------------------------------------------------------
+
+variable "vpc_cidr" {
+  description = "CIDR for the lab VPC."
+  type        = string
+  default     = "10.60.0.0/16"
+}
+
+variable "container_port" {
+  description = "Port the Flask app listens on inside the container."
+  type        = number
+  default     = 8080
+}
+
+variable "image_tag" {
+  description = "ECR image tag to deploy."
+  type        = string
+  default     = "latest"
+}
+
+variable "fargate_cpu" {
+  description = "Fargate CPU units (256 = 0.25 vCPU)."
+  type        = string
+  default     = "256"
+}
+
+variable "fargate_memory" {
+  description = "Fargate memory in MiB."
+  type        = string
+  default     = "512"
+}
+
+variable "desired_count" {
+  description = "Number of Fargate tasks. Set 0 to stop paying for tasks (ALB still costs)."
+  type        = number
+  default     = 1
+}
+
+variable "log_retention_days" {
+  description = "CloudWatch Logs retention for the API."
+  type        = number
+  default     = 7
+}
+
+variable "app_secret_demo" {
+  description = "Demo APP_SECRET env var for Phase 2. Phase 3 moves this to Secrets Manager."
+  type        = string
+  default     = "phase2-demo-secret"
+  sensitive   = true
+}

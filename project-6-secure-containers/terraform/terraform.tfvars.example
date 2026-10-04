@@ -1,7 +1,17 @@
-project_name        = "project6"
-environment         = "lab"
-aws_region          = "us-east-1"
-ecr_repository_name = "project6-api"
-ecr_force_delete    = true
-ecr_scan_on_push    = true
+project_name         = "project6"
+environment          = "lab"
+aws_region           = "us-east-1"
+ecr_repository_name  = "project6-api"
+ecr_force_delete     = true
+ecr_scan_on_push     = true
 ecr_keep_image_count = 5
+
+# Phase 2
+vpc_cidr           = "10.60.0.0/16"
+container_port     = 8080
+image_tag          = "latest"
+fargate_cpu        = "256"
+fargate_memory     = "512"
+desired_count      = 1
+log_retention_days = 7
+# app_secret_demo  = "phase2-demo-secret"  # optional override

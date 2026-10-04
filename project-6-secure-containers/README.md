@@ -10,7 +10,7 @@ This is the hands-on lab that bridges your static-site / Terraform work toward *
 
 ## Status
 
-**In progress** — Phase 0 (local Docker) and Phase 1 (ECR push) complete. Next: Phase 2 (ECS + ALB) in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**In progress** — Phases 0–2 complete (Docker → ECR → ECS Fargate + ALB). Next: Phase 3 (Secrets Manager) in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Target architecture
 

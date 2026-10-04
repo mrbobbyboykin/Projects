@@ -32,4 +32,29 @@ output "docker_push_commands" {
   EOT
 }
 
+output "alb_dns_name" {
+  description = "Public ALB hostname — hit http://<this>/health"
+  value       = aws_lb.api.dns_name
+}
+
+output "api_health_url" {
+  value = "http://${aws_lb.api.dns_name}/health"
+}
+
+output "api_info_url" {
+  value = "http://${aws_lb.api.dns_name}/info"
+}
+
+output "ecs_cluster_name" {
+  value = aws_ecs_cluster.main.name
+}
+
+output "ecs_service_name" {
+  value = aws_ecs_service.api.name
+}
+
+output "cloudwatch_log_group" {
+  value = aws_cloudwatch_log_group.api.name
+}
+
 data "aws_caller_identity" "current" {}
