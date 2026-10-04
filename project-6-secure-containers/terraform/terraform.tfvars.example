@@ -14,4 +14,6 @@ fargate_cpu        = "256"
 fargate_memory     = "512"
 desired_count      = 1
 log_retention_days = 7
-# app_secret_demo  = "phase2-demo-secret"  # optional override
+
+# Phase 3 — value is stored in Secrets Manager (override locally in terraform.tfvars if you want)
+# app_secret_demo = "phase3-secrets-manager-demo"

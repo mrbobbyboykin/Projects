@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-# Task role is intentionally minimal in Phase 2; Phase 3 adds Secrets Manager access.
+# Task role — Phase 3 attaches a least-privilege Secrets Manager policy (see secrets.tf).
 resource "aws_iam_role" "ecs_task" {
   name = "${var.project_name}-${var.environment}-ecs-task"
 
@@ -85,10 +85,15 @@ resource "aws_ecs_task_definition" "api" {
         {
           name  = "PORT"
           value = tostring(var.container_port)
-        },
+        }
+      ]
+
+      # Phase 3: inject APP_SECRET from Secrets Manager (not plaintext in the task def value).
+      # ECS resolves this at start using the execution role; value becomes an env var in the container.
+      secrets = [
         {
-          name  = "APP_SECRET"
-          value = var.app_secret_demo
+          name      = "APP_SECRET"
+          valueFrom = aws_secretsmanager_secret.app.arn
         }
       ]
 

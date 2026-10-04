@@ -6,7 +6,16 @@ Infrastructure for the secure containerized API lab.
 
 - **Phase 1 (ECR):** implemented
 - **Phase 2 (VPC + ALB + ECS Fargate):** implemented (cheap path — public subnets, no NAT)
-- **Phase 3+:** Secrets Manager hardening, CI stretch
+- **Phase 3 (Secrets Manager):** implemented — `APP_SECRET` injected from Secrets Manager
+- **Phase 4+:** alarms, budget, optional CI
+
+## Phase 3 notes
+
+- Secret name: `project6/lab/app-secret`
+- Task definition uses `secrets` → Secrets Manager ARN (not a plaintext `environment` value)
+- **Execution role** can `GetSecretValue` so ECS can inject the secret at start
+- **Task role** can `GetSecretValue` on that secret only (least privilege)
+- App still only reports `secret_configured: true/false` via `/info`
 
 ## Apply
 

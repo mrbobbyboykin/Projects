@@ -139,12 +139,16 @@ Live URLs (cheap path, HTTP):
 
 ### Phase 3 — Secrets + IAM hardening (2–3 hours)
 
-- [ ] Store a demo secret in Secrets Manager
-- [ ] Task **execution** role: pull from ECR, write logs
-- [ ] Task **role**: read only that secret
-- [ ] Inject secret into the task (env from Secrets Manager)
-- [ ] Prove `/info` sees the secret is present without logging its value
+- [x] Store a demo secret in Secrets Manager
+- [x] Task **execution** role: pull from ECR, write logs (+ GetSecretValue for injection)
+- [x] Task **role**: read only that secret
+- [x] Inject secret into the task (env from Secrets Manager)
+- [x] Prove `/info` sees the secret is present without logging its value
 - [ ] Screenshot: IAM roles + secret reference in task definition
+
+Secret: `project6/lab/app-secret`  
+Task definition revision **2**: `APP_SECRET` comes from Secrets Manager ARN (not plaintext env).  
+`/info` still returns `"secret_configured": true` without exposing the value.
 
 ### Phase 4 — Observability + cost guardrails (1–2 hours)
 

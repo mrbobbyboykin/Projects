@@ -57,4 +57,21 @@ output "cloudwatch_log_group" {
   value = aws_cloudwatch_log_group.api.name
 }
 
+output "secretsmanager_secret_arn" {
+  description = "Secrets Manager ARN injected as APP_SECRET into the ECS task."
+  value       = aws_secretsmanager_secret.app.arn
+}
+
+output "secretsmanager_secret_name" {
+  value = aws_secretsmanager_secret.app.name
+}
+
+output "ecs_execution_role_name" {
+  value = aws_iam_role.ecs_execution.name
+}
+
+output "ecs_task_role_name" {
+  value = aws_iam_role.ecs_task.name
+}
+
 data "aws_caller_identity" "current" {}

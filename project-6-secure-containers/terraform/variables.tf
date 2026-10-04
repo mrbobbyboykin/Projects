@@ -87,8 +87,8 @@ variable "log_retention_days" {
 }
 
 variable "app_secret_demo" {
-  description = "Demo APP_SECRET env var for Phase 2. Phase 3 moves this to Secrets Manager."
+  description = "Demo secret value stored in Secrets Manager (Phase 3). Not injected as plaintext env in the task definition."
   type        = string
-  default     = "phase2-demo-secret"
+  default     = "phase3-secrets-manager-demo"
   sensitive   = true
 }
