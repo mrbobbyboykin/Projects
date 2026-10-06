@@ -40,28 +40,34 @@ flowchart TB
   IAM -.-> ECS
 ```
 
+
+
 ### Cheap path vs production-like path
 
-| Choice | Networking | Monthly feel | When to use |
-|--------|------------|--------------|-------------|
-| **Cheap (default)** | Tasks in **public** subnets with public IPs; no NAT | Lower | Weekend lab, portfolio demo |
-| **Production-like** | Tasks in **private** subnets + **NAT Gateway** | +~$32 NAT | Short stretch only, then destroy |
+
+| Choice              | Networking                                          | Monthly feel | When to use                      |
+| ------------------- | --------------------------------------------------- | ------------ | -------------------------------- |
+| **Cheap (default)** | Tasks in **public** subnets with public IPs; no NAT | Lower        | Weekend lab, portfolio demo      |
+| **Production-like** | Tasks in **private** subnets + **NAT Gateway**      | +~$32 NAT    | Short stretch only, then destroy |
+
 
 Start cheap. Turn on private + NAT only after the app works end-to-end.
 
 ## AWS services involved
 
-| Service | Role |
-|---------|------|
-| ECR | Store Docker images; optional scan on push |
-| ECS Fargate | Run containers without managing EC2 |
-| ALB | Public entry, health checks, path routing |
-| VPC | Subnets, security groups |
-| IAM | Execution role (pull image, logs) + task role (read secret) |
-| Secrets Manager | Runtime secret (API key or demo token) |
-| CloudWatch | Container logs + simple 5xx / unhealthy-host alarm |
-| Terraform | Infrastructure as code (same pattern as Projects 2–4) |
-| GitHub Actions | Stretch: build, Trivy scan, push, deploy |
+
+| Service         | Role                                                        |
+| --------------- | ----------------------------------------------------------- |
+| ECR             | Store Docker images; optional scan on push                  |
+| ECS Fargate     | Run containers without managing EC2                         |
+| ALB             | Public entry, health checks, path routing                   |
+| VPC             | Subnets, security groups                                    |
+| IAM             | Execution role (pull image, logs) + task role (read secret) |
+| Secrets Manager | Runtime secret (API key or demo token)                      |
+| CloudWatch      | Container logs + simple 5xx / unhealthy-host alarm          |
+| Terraform       | Infrastructure as code (same pattern as Projects 2–4)       |
+| GitHub Actions  | Stretch: build, Trivy scan, push, deploy                    |
+
 
 ## App shape (keep it tiny)
 
@@ -86,12 +92,14 @@ Language: Python (Flask/FastAPI) or Node — pick what you type fastest. Non-roo
 
 ### Rough cost bands
 
-| Scenario | Estimate |
-|----------|----------|
-| Weekend only (build, run 8–16 hours, destroy) | **~$5–15** |
-| Cheap path left up ~1 month (ALB + 1 Fargate task + ECR) | **~$15–40** |
-| Same + NAT Gateway left up | **+$32/month** — avoid unless practicing private networking |
-| Idle after destroy | Near **$0** (ECR storage pennies if you keep images) |
+
+| Scenario                                                 | Estimate                                                    |
+| -------------------------------------------------------- | ----------------------------------------------------------- |
+| Weekend only (build, run 8–16 hours, destroy)            | **~$5–15**                                                  |
+| Cheap path left up ~1 month (ALB + 1 Fargate task + ECR) | **~$15–40**                                                 |
+| Same + NAT Gateway left up                               | **+$32/month** — avoid unless practicing private networking |
+| Idle after destroy                                       | Near **$0** (ECR storage pennies if you keep images)        |
+
 
 Biggest cost drivers: **ALB** (hours), **Fargate** (hours), **NAT** (if enabled). ECR and Secrets Manager are usually small.
 
@@ -128,11 +136,12 @@ ECR repo: `project6-api` → `345485442145.dkr.ecr.us-east-1.amazonaws.com/proje
 - [x] Wire `/health` as the target group health check
 - [x] Deploy 1 Fargate task; confirm ALB DNS returns `/health` and `/info`
 - [x] Confirm logs appear in CloudWatch Logs
-- [ ] Screenshot: healthy target + sample response
+- [x] Screenshot: healthy target + sample response
 
-Live URLs (cheap path, HTTP):
-- Health: `http://project6-lab-alb-1609487481.us-east-1.elb.amazonaws.com/health`
-- Info: `http://project6-lab-alb-1609487481.us-east-1.elb.amazonaws.com/info`
+Live URLs (cheap path, HTTP) — updated after Phase 4 destroy/redeploy:
+
+- Health: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/health`
+- Info: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/info`
 - Logs: CloudWatch `/ecs/project6-lab-api`
 
 **Cost note:** ALB + 1 Fargate task are billing while this is up. Destroy or scale to 0 when idle.
@@ -144,7 +153,7 @@ Live URLs (cheap path, HTTP):
 - [x] Task **role**: read only that secret
 - [x] Inject secret into the task (env from Secrets Manager)
 - [x] Prove `/info` sees the secret is present without logging its value
-- [ ] Screenshot: IAM roles + secret reference in task definition
+- [x] Screenshot: IAM roles + secret reference in task definition
 
 Secret: `project6/lab/app-secret`  
 Task definition revision **2**: `APP_SECRET` comes from Secrets Manager ARN (not plaintext env).  
@@ -152,10 +161,23 @@ Task definition revision **2**: `APP_SECRET` comes from Secrets Manager ARN (not
 
 ### Phase 4 — Observability + cost guardrails (1–2 hours)
 
-- [ ] CloudWatch alarm on unhealthy hosts or ALB 5xx
-- [ ] AWS Budget alert ($20)
-- [ ] Document destroy steps in `terraform/README.md`
-- [ ] Practice `terraform destroy` and redeploy once
+- [x] CloudWatch alarm on unhealthy hosts or ALB 5xx
+- [x] AWS Budget alert ($20)
+- [x] Document destroy steps in `terraform/README.md`
+- [x] Practice `terraform destroy` and redeploy once
+
+Codified in `terraform/observability.tf` (imported console resources + new budget):
+- SNS: `project6-lab-alerts` → email alerts
+- Alarms: `project6-lab-unhealthy-hosts`, `project6-lab-4xx-count`
+- Budget: `project6-lab-20` ($20 monthly; 80%/100% actual + 100% forecasted)
+
+Destroy/redeploy practiced: **30 destroyed → 30 added**, image re-pushed to ECR, `/health` OK on new ALB DNS.  
+After recreate: re-confirm the SNS email subscription.  
+If you still have console budget **My Monthly Cost Budget**, delete it to avoid a duplicate $20 budget.
+
+**Current ALB (after redeploy):**
+- Health: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/health`
+- Info: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/info`
 
 ### Phase 5 — Stretch CI/CD (optional, next weekend)
 
@@ -195,12 +217,12 @@ Outputs to print: ALB DNS name, ECR repo URL, ECS cluster/service names, CloudWa
 
 You are “done” for a resume/LinkedIn bullet when:
 
-1. Public ALB URL serves `/health` = 200  
-2. Image lives in ECR and ECS pulls it  
-3. Secret comes from Secrets Manager  
-4. Logs are in CloudWatch  
-5. Stack is in Terraform and can be destroyed/recreated  
-6. You have 4–6 screenshots + a short “What was Implemented” write-up  
+1. Public ALB URL serves `/health` = 200
+2. Image lives in ECR and ECS pulls it
+3. Secret comes from Secrets Manager
+4. Logs are in CloudWatch
+5. Stack is in Terraform and can be destroyed/recreated
+6. You have 4–6 screenshots + a short “What was Implemented” write-up
 
 ---
 
@@ -221,3 +243,4 @@ You are “done” for a resume/LinkedIn bullet when:
 - Never commit AWS keys, `terraform.tfvars` with secrets, or real API tokens
 - Prefer IAM roles / short-lived credentials over long-lived access keys
 - If a key was ever pasted into notes or chat, **rotate it in IAM immediately**
+

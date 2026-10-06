@@ -7,7 +7,8 @@ Infrastructure for the secure containerized API lab.
 - **Phase 1 (ECR):** implemented
 - **Phase 2 (VPC + ALB + ECS Fargate):** implemented (cheap path — public subnets, no NAT)
 - **Phase 3 (Secrets Manager):** implemented — `APP_SECRET` injected from Secrets Manager
-- **Phase 4+:** alarms, budget, optional CI
+- **Phase 4 (observability):** implemented — SNS + CloudWatch alarms + $20 budget
+- **Phase 5:** optional CI stretch
 
 ## Phase 3 notes
 
@@ -16,6 +17,15 @@ Infrastructure for the secure containerized API lab.
 - **Execution role** can `GetSecretValue` so ECS can inject the secret at start
 - **Task role** can `GetSecretValue` on that secret only (least privilege)
 - App still only reports `secret_configured: true/false` via `/info`
+
+## Phase 4 notes
+
+- File: `observability.tf`
+- SNS topic: `project6-lab-alerts`
+- Alarms: `project6-lab-unhealthy-hosts`, `project6-lab-4xx-count`
+- Budget: `project6-lab-20` ($20/month)
+- Set `alert_email` in `terraform.tfvars` (gitignored)
+- After destroy/recreate: confirm the SNS email link again
 
 ## Apply
 
@@ -59,8 +69,22 @@ aws ecs update-service --cluster project6-lab --service project6-lab-api --force
 - Log retention: 7 days
 - When idle: `terraform destroy` **or** set `desired_count = 0` and apply (ALB still costs until destroyed)
 
-## Destroy
+## Destroy / redeploy (Phase 4 practice)
+
+Stops ALB + Fargate billing. ECR images are removed if the repo is destroyed (`force_delete = true`).
 
 ```powershell
+cd "C:\Users\bboyk\OneDrive\Projects\Projects-git\project-6-secure-containers\terraform"
 terraform destroy
 ```
+
+Redeploy later:
+
+```powershell
+terraform apply
+```
+
+Then:
+1. Re-push the image if ECR was destroyed (see push commands above)
+2. Confirm the SNS email subscription (`project6-lab-alerts`)
+3. `curl.exe` the new `api_health_url` output

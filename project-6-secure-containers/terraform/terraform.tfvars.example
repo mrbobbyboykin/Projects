@@ -17,3 +17,7 @@ log_retention_days = 7
 
 # Phase 3 — value is stored in Secrets Manager (override locally in terraform.tfvars if you want)
 # app_secret_demo = "phase3-secrets-manager-demo"
+
+# Phase 4
+alert_email        = "you@example.com"
+monthly_budget_usd = "20"

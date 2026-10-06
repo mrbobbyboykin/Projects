@@ -74,4 +74,20 @@ output "ecs_task_role_name" {
   value = aws_iam_role.ecs_task.name
 }
 
+output "sns_topic_arn" {
+  value = aws_sns_topic.alerts.arn
+}
+
+output "alarm_unhealthy_hosts_name" {
+  value = aws_cloudwatch_metric_alarm.unhealthy_hosts.alarm_name
+}
+
+output "alarm_target_4xx_name" {
+  value = aws_cloudwatch_metric_alarm.target_4xx.alarm_name
+}
+
+output "budget_name" {
+  value = aws_budgets_budget.lab.name
+}
+
 data "aws_caller_identity" "current" {}

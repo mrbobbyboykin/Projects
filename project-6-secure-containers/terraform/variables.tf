@@ -92,3 +92,18 @@ variable "app_secret_demo" {
   default     = "phase3-secrets-manager-demo"
   sensitive   = true
 }
+
+# -----------------------------------------------------------------------------
+# Phase 4 — Alerts + budget
+# -----------------------------------------------------------------------------
+
+variable "alert_email" {
+  description = "Email for SNS alarm notifications and budget alerts. Confirm SNS subscription after apply/recreate."
+  type        = string
+}
+
+variable "monthly_budget_usd" {
+  description = "Monthly AWS Budgets limit in USD for this lab."
+  type        = string
+  default     = "20"
+}
