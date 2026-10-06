@@ -9,7 +9,7 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-
+# Defines the health check function
 @app.get("/health")
 def health():
     """ALB / container health check — keep this fast and dependency-free."""
