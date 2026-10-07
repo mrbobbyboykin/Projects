@@ -107,3 +107,43 @@ variable "monthly_budget_usd" {
   type        = string
   default     = "20"
 }
+
+# -----------------------------------------------------------------------------
+# Phase 5 — GitHub OIDC, WAF, GuardDuty
+# -----------------------------------------------------------------------------
+
+variable "github_actions_role_name" {
+  description = "IAM role name assumed by GitHub Actions via OIDC. Keep stable so the GitHub Actions variable AWS_ROLE_ARN_PROJECT6 stays valid."
+  type        = string
+  default     = "project6-github-actions-ecr-ecs"
+}
+
+variable "github_repository" {
+  description = "GitHub org/repo allowed to assume the OIDC role (e.g. mrbobbyboykin/Projects)."
+  type        = string
+  default     = "mrbobbyboykin/Projects"
+}
+
+variable "github_branch" {
+  description = "GitHub branch allowed to assume the OIDC role."
+  type        = string
+  default     = "main"
+}
+
+variable "github_oidc_thumbprint" {
+  description = "Thumbprint for token.actions.githubusercontent.com (from existing IAM OIDC provider)."
+  type        = string
+  default     = "ab9d0263244dd0326eb67015705a667e79cfe998"
+}
+
+variable "enable_waf" {
+  description = "Attach AWS WAF (managed rule groups) to the ALB. Adds Web ACL + request charges."
+  type        = bool
+  default     = true
+}
+
+variable "enable_guardduty" {
+  description = "Enable GuardDuty detector in this region. Free trial then ongoing detection cost."
+  type        = bool
+  default     = true
+}

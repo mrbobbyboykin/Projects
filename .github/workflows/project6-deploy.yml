@@ -46,12 +46,12 @@ jobs:
           echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
           docker build -t "$IMAGE" .
 
-      - name: Trivy scan (warn-only)
+      - name: Trivy scan (fail on HIGH/CRITICAL)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.IMAGE }}
           format: table
-          exit-code: "0"          # warn-only: never fail the job
+          exit-code: "1"          # fail the job on HIGH/CRITICAL findings
           ignore-unfixed: true
           severity: HIGH,CRITICAL
           vuln-type: os,library

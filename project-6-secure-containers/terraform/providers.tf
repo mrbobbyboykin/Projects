@@ -7,7 +7,7 @@ provider "aws" {
       Environment = var.environment
       ManagedBy   = "terraform"
       Repository  = "Projects/project-6-secure-containers"
-      Phase       = "4-observability"
+      Phase       = "5-cicd-security"
     }
   }
 }

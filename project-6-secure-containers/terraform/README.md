@@ -8,7 +8,7 @@ Infrastructure for the secure containerized API lab.
 - **Phase 2 (VPC + ALB + ECS Fargate):** implemented (cheap path — public subnets, no NAT)
 - **Phase 3 (Secrets Manager):** implemented — `APP_SECRET` injected from Secrets Manager
 - **Phase 4 (observability):** implemented — SNS + CloudWatch alarms + $20 budget
-- **Phase 5:** optional CI stretch
+- **Phase 5 (CI + security):** GitHub OIDC role, WAF on ALB, GuardDuty detector; Trivy fails on HIGH/CRITICAL in Actions
 
 ## Phase 3 notes
 
@@ -26,6 +26,15 @@ Infrastructure for the secure containerized API lab.
 - Budget: `project6-lab-20` ($20/month)
 - Set `alert_email` in `terraform.tfvars` (gitignored)
 - After destroy/recreate: confirm the SNS email link again
+
+## Phase 5 notes
+
+- Files: `github-oidc.tf`, `waf.tf`, `guardduty.tf`
+- GitHub OIDC role: `project6-github-actions-ecr-ecs` (output `github_actions_role_arn`)
+- WAF: regional Web ACL on the ALB (`enable_waf`); managed rules Common + Known Bad Inputs
+- GuardDuty: detector in `us-east-1` (`enable_guardduty`)
+- Workflow Trivy: `exit-code: "1"` for HIGH/CRITICAL
+- Cost: WAF Web ACL + requests, and GuardDuty after free trial — set `enable_waf = false` / `enable_guardduty = false` or destroy when idle
 
 ## Apply
 

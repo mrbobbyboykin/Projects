@@ -90,4 +90,21 @@ output "budget_name" {
   value = aws_budgets_budget.lab.name
 }
 
+output "github_actions_role_arn" {
+  description = "Set GitHub Actions variable AWS_ROLE_ARN_PROJECT6 to this ARN."
+  value       = aws_iam_role.github_actions.arn
+}
+
+output "github_oidc_provider_arn" {
+  value = aws_iam_openid_connect_provider.github.arn
+}
+
+output "waf_web_acl_arn" {
+  value = var.enable_waf ? aws_wafv2_web_acl.api[0].arn : null
+}
+
+output "guardduty_detector_id" {
+  value = var.enable_guardduty ? aws_guardduty_detector.main[0].id : null
+}
+
 data "aws_caller_identity" "current" {}

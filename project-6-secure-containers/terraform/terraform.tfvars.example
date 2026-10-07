@@ -21,3 +21,10 @@ log_retention_days = 7
 # Phase 4
 alert_email        = "you@example.com"
 monthly_budget_usd = "20"
+
+# Phase 5
+github_actions_role_name = "project6-github-actions-ecr-ecs"
+github_repository        = "mrbobbyboykin/Projects"
+github_branch            = "main"
+enable_waf               = true
+enable_guardduty         = true

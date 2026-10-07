@@ -10,7 +10,7 @@ This is the hands-on lab that bridges your static-site / Terraform work toward *
 
 ## Status
 
-**In progress** — Phases 0–4 complete (through alarms + $20 budget). Optional: practice destroy/redeploy, then Phase 5 CI stretch in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**Complete (Phases 0–5)** — Docker → ECR → ECS/ALB → Secrets Manager → alarms/budget → GitHub Actions (OIDC + Trivy fail on HIGH/CRITICAL) → WAF + GuardDuty. Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Target architecture
 

@@ -167,6 +167,7 @@ Task definition revision **2**: `APP_SECRET` comes from Secrets Manager ARN (not
 - [x] Practice `terraform destroy` and redeploy once
 
 Codified in `terraform/observability.tf` (imported console resources + new budget):
+
 - SNS: `project6-lab-alerts` → email alerts
 - Alarms: `project6-lab-unhealthy-hosts`, `project6-lab-4xx-count`
 - Budget: `project6-lab-20` ($20 monthly; 80%/100% actual + 100% forecasted)
@@ -176,16 +177,27 @@ After recreate: re-confirm the SNS email subscription.
 If you still have console budget **My Monthly Cost Budget**, delete it to avoid a duplicate $20 budget.
 
 **Current ALB (after redeploy):**
+
 - Health: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/health`
 - Info: `http://project6-lab-alb-938853083.us-east-1.elb.amazonaws.com/info`
 
-### Phase 5 — Stretch CI/CD (optional, next weekend)
+### Phase 5 — Stretch CI/CD + security controls
 
-- [ ] GitHub Actions: build → Trivy scan → push to ECR
-- [ ] Deploy new task definition / force new ECS deployment
-- [ ] Fail the pipeline on HIGH/CRITICAL image CVEs (or warn-only first)
-- [ ] (Optional) AWS WAF on ALB with a basic managed rule set
-- [ ] (Optional) GuardDuty enabled; note what it watches
+- [x] GitHub Actions: build → Trivy scan → push to ECR
+- [x] Deploy new task definition / force new ECS deployment
+- [x] Fail the pipeline on HIGH/CRITICAL image CVEs (`exit-code: "1"`)
+- [x] AWS WAF on ALB (Common + Known Bad Inputs managed rule groups)
+- [x] GuardDuty detector enabled in `us-east-1`
+- [x] GitHub OIDC provider + IAM role codified in Terraform (`github-oidc.tf`)
+
+**Terraform files:** `github-oidc.tf`, `waf.tf`, `guardduty.tf`  
+**Workflow:** `.github/workflows/project6-deploy.yml`  
+**Role ARN (GitHub var `AWS_ROLE_ARN_PROJECT6`):** `arn:aws:iam::345485442145:role/project6-github-actions-ecr-ecs`
+
+**GuardDuty watches (high level):** unusual API activity, compromised instances/credentials signals, recon, and other account/region threat findings (not app-specific like WAF).  
+**WAF:** regional Web ACL associated with the ALB; default allow + managed rules that can block matching requests.
+
+**Note:** With Trivy fail-closed, the next Actions run will stop before push/deploy if HIGH/CRITICAL findings exist (even with `ignore-unfixed: true` for unfixed-only noise).
 
 ---
 
