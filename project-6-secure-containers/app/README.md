@@ -18,6 +18,16 @@ docker build -t project6-api:local .
 docker run --rm -p 8080:8080 -e APP_SECRET=local-demo-secret project6-api:local
 ```
 
+### Keeping Trivy green (CI)
+
+The GitHub Actions workflow fails on **HIGH/CRITICAL** findings (`exit-code: 1`, `ignore-unfixed: true`).
+
+Most findings come from **OS packages in the base image**, not Flask. This Dockerfile:
+- uses a current `python:3.12-slim-bookworm` tag (not an old patch pin)
+- runs `apt-get upgrade` so Debian security fixes are applied
+
+After changing the Dockerfile, push to `main` (or re-run the workflow) so CI rebuilds and rescans.
+
 In another terminal (use `curl.exe` on Windows — plain `curl` is a PowerShell alias):
 
 ```powershell
