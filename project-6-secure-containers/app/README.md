@@ -22,9 +22,12 @@ docker run --rm -p 8080:8080 -e APP_SECRET=local-demo-secret project6-api:local
 
 The GitHub Actions workflow fails on **HIGH/CRITICAL** findings (`exit-code: 1`, `ignore-unfixed: true`).
 
-Most findings come from **OS packages in the base image**, not Flask. This Dockerfile:
-- uses a current `python:3.12-slim-bookworm` tag (not an old patch pin)
-- runs `apt-get upgrade` so Debian security fixes are applied
+**CVE** = Common Vulnerabilities and Exposures — a public ID for a known security flaw (e.g. `CVE-2025-47273`).
+
+This Dockerfile:
+- uses a current `python:3.12-slim-bookworm` tag + `apt-get upgrade` (OS CVEs)
+- upgrades `pip` / `setuptools` / `wheel`
+- removes pip’s embedded `bom.cdx.json` (avoids known Trivy false positives)
 
 After changing the Dockerfile, push to `main` (or re-run the workflow) so CI rebuilds and rescans.
 

@@ -55,6 +55,8 @@ jobs:
           ignore-unfixed: true
           severity: HIGH,CRITICAL
           vuln-type: os,library
+          # Skip pip's embedded CycloneDX SBOM (Trivy false positives for setuptools/msgpack).
+          skip-files: "**/pip/_vendor/bom.cdx.json"
 
       - name: Push image to ECR
         run: docker push "$IMAGE"

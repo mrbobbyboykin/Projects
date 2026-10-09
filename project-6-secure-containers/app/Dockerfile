@@ -14,8 +14,11 @@ WORKDIR /app
 
 # Install deps as root, then drop privileges.
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt \
+    # pip ships an embedded CycloneDX SBOM that Trivy can misread as installed
+    # vulnerable setuptools/msgpack versions (known false positive).
+    && find /usr/local/lib -path '*/pip/_vendor/bom.cdx.json' -delete
 
 COPY main.py .
 
